@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="WEB_MODULE" version="4">
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
+    <exclude-output />
+    <content url="file://$MODULE_DIR$">
+      <excludeFolder url="file://$MODULE_DIR$/$cachePath/dart-sdk/lib/_internal/js_runtime/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/$cachePath/dart-sdk/lib/_internal/js_runtime/build" />
+      <excludeFolder url="file://$MODULE_DIR$/$cachePath/dart-sdk/lib/_internal/sdk_library_metadata/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/$cachePath/dart-sdk/lib/_internal/sdk_library_metadata/build" />
+      <excludeFolder url="file://$MODULE_DIR$/$cachePath/dart-sdk/lib/analysis_server/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/$cachePath/dart-sdk/lib/analysis_server/build" />
+      <excludeFolder url="file://$MODULE_DIR$/$cachePath/dart-sdk/lib/analyzer/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/$cachePath/dart-sdk/lib/analyzer/build" />
+      <excludeFolder url="file://$MODULE_DIR$/$cachePath/dart-sdk/lib/front_end/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/$cachePath/dart-sdk/lib/front_end/build" />
+      <excludeFolder url="file://$MODULE_DIR$/$cachePath/dart-sdk/lib/kernel/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/$cachePath/dart-sdk/lib/kernel/build" />
+      <excludeFolder url="file://$MODULE_DIR$/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/build" />
+    </content>
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="Dart SDK" level="project" />
+    <orderEntry type="library" name="Dart Packages" level="project" />
+  </component>
+</module>
