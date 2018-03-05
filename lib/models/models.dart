@@ -6,3 +6,4 @@ export 'post.dart';
 export 'topic.dart';
 export 'user.dart';
 export 'collection.dart';
+export 'request_status.dart';

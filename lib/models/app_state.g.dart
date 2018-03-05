@@ -23,11 +23,24 @@ class _$AppState extends AppState {
   final Collection<int, Category> categories;
   @override
   final Collection<int, Post> posts;
+  @override
+  final RequestStatus fetchTopicStatus;
+  @override
+  final RequestStatus fetchTopicDetailStatus;
+  @override
+  final RequestStatus fetchUserStatus;
 
   factory _$AppState([void updates(AppStateBuilder b)]) =>
       (new AppStateBuilder()..update(updates)).build();
 
-  _$AppState._({this.topics, this.users, this.categories, this.posts})
+  _$AppState._(
+      {this.topics,
+      this.users,
+      this.categories,
+      this.posts,
+      this.fetchTopicStatus,
+      this.fetchTopicDetailStatus,
+      this.fetchUserStatus})
       : super._() {
     if (topics == null)
       throw new BuiltValueNullFieldError('AppState', 'topics');
@@ -35,6 +48,12 @@ class _$AppState extends AppState {
     if (categories == null)
       throw new BuiltValueNullFieldError('AppState', 'categories');
     if (posts == null) throw new BuiltValueNullFieldError('AppState', 'posts');
+    if (fetchTopicStatus == null)
+      throw new BuiltValueNullFieldError('AppState', 'fetchTopicStatus');
+    if (fetchTopicDetailStatus == null)
+      throw new BuiltValueNullFieldError('AppState', 'fetchTopicDetailStatus');
+    if (fetchUserStatus == null)
+      throw new BuiltValueNullFieldError('AppState', 'fetchUserStatus');
   }
 
   @override
@@ -51,14 +70,24 @@ class _$AppState extends AppState {
     return topics == other.topics &&
         users == other.users &&
         categories == other.categories &&
-        posts == other.posts;
+        posts == other.posts &&
+        fetchTopicStatus == other.fetchTopicStatus &&
+        fetchTopicDetailStatus == other.fetchTopicDetailStatus &&
+        fetchUserStatus == other.fetchUserStatus;
   }
 
   @override
   int get hashCode {
     return $jf($jc(
-        $jc($jc($jc(0, topics.hashCode), users.hashCode), categories.hashCode),
-        posts.hashCode));
+        $jc(
+            $jc(
+                $jc(
+                    $jc($jc($jc(0, topics.hashCode), users.hashCode),
+                        categories.hashCode),
+                    posts.hashCode),
+                fetchTopicStatus.hashCode),
+            fetchTopicDetailStatus.hashCode),
+        fetchUserStatus.hashCode));
   }
 
   @override
@@ -67,7 +96,10 @@ class _$AppState extends AppState {
           ..add('topics', topics)
           ..add('users', users)
           ..add('categories', categories)
-          ..add('posts', posts))
+          ..add('posts', posts)
+          ..add('fetchTopicStatus', fetchTopicStatus)
+          ..add('fetchTopicDetailStatus', fetchTopicDetailStatus)
+          ..add('fetchUserStatus', fetchUserStatus))
         .toString();
   }
 }
@@ -96,6 +128,24 @@ class AppStateBuilder implements Builder<AppState, AppStateBuilder> {
       _$this._posts ??= new CollectionBuilder<int, Post>();
   set posts(CollectionBuilder<int, Post> posts) => _$this._posts = posts;
 
+  RequestStatusBuilder _fetchTopicStatus;
+  RequestStatusBuilder get fetchTopicStatus =>
+      _$this._fetchTopicStatus ??= new RequestStatusBuilder();
+  set fetchTopicStatus(RequestStatusBuilder fetchTopicStatus) =>
+      _$this._fetchTopicStatus = fetchTopicStatus;
+
+  RequestStatusBuilder _fetchTopicDetailStatus;
+  RequestStatusBuilder get fetchTopicDetailStatus =>
+      _$this._fetchTopicDetailStatus ??= new RequestStatusBuilder();
+  set fetchTopicDetailStatus(RequestStatusBuilder fetchTopicDetailStatus) =>
+      _$this._fetchTopicDetailStatus = fetchTopicDetailStatus;
+
+  RequestStatusBuilder _fetchUserStatus;
+  RequestStatusBuilder get fetchUserStatus =>
+      _$this._fetchUserStatus ??= new RequestStatusBuilder();
+  set fetchUserStatus(RequestStatusBuilder fetchUserStatus) =>
+      _$this._fetchUserStatus = fetchUserStatus;
+
   AppStateBuilder();
 
   AppStateBuilder get _$this {
@@ -104,6 +154,9 @@ class AppStateBuilder implements Builder<AppState, AppStateBuilder> {
       _users = _$v.users?.toBuilder();
       _categories = _$v.categories?.toBuilder();
       _posts = _$v.posts?.toBuilder();
+      _fetchTopicStatus = _$v.fetchTopicStatus?.toBuilder();
+      _fetchTopicDetailStatus = _$v.fetchTopicDetailStatus?.toBuilder();
+      _fetchUserStatus = _$v.fetchUserStatus?.toBuilder();
       _$v = null;
     }
     return this;
@@ -129,7 +182,10 @@ class AppStateBuilder implements Builder<AppState, AppStateBuilder> {
               topics: topics.build(),
               users: users.build(),
               categories: categories.build(),
-              posts: posts.build());
+              posts: posts.build(),
+              fetchTopicStatus: fetchTopicStatus.build(),
+              fetchTopicDetailStatus: fetchTopicDetailStatus.build(),
+              fetchUserStatus: fetchUserStatus.build());
     } catch (_) {
       String _$failedField;
       try {
@@ -141,6 +197,12 @@ class AppStateBuilder implements Builder<AppState, AppStateBuilder> {
         categories.build();
         _$failedField = 'posts';
         posts.build();
+        _$failedField = 'fetchTopicStatus';
+        fetchTopicStatus.build();
+        _$failedField = 'fetchTopicDetailStatus';
+        fetchTopicDetailStatus.build();
+        _$failedField = 'fetchUserStatus';
+        fetchUserStatus.build();
       } catch (e) {
         throw new BuiltValueNestedFieldError(
             'AppState', _$failedField, e.toString());

@@ -24,6 +24,12 @@ class _$User extends User {
   @override
   final String picture;
   @override
+  final String cover;
+  @override
+  final int followerCount;
+  @override
+  final int followingCount;
+  @override
   final int reputation;
   @override
   final int postCount;
@@ -42,6 +48,9 @@ class _$User extends User {
       this.userName,
       this.status,
       this.picture,
+      this.cover,
+      this.followerCount,
+      this.followingCount,
       this.reputation,
       this.postCount,
       this.iconBgColor,
@@ -80,6 +89,9 @@ class _$User extends User {
         userName == other.userName &&
         status == other.status &&
         picture == other.picture &&
+        cover == other.cover &&
+        followerCount == other.followerCount &&
+        followingCount == other.followingCount &&
         reputation == other.reputation &&
         postCount == other.postCount &&
         iconBgColor == other.iconBgColor &&
@@ -95,9 +107,17 @@ class _$User extends User {
                 $jc(
                     $jc(
                         $jc(
-                            $jc($jc($jc(0, uid.hashCode), userName.hashCode),
-                                status.hashCode),
-                            picture.hashCode),
+                            $jc(
+                                $jc(
+                                    $jc(
+                                        $jc(
+                                            $jc($jc(0, uid.hashCode),
+                                                userName.hashCode),
+                                            status.hashCode),
+                                        picture.hashCode),
+                                    cover.hashCode),
+                                followerCount.hashCode),
+                            followingCount.hashCode),
                         reputation.hashCode),
                     postCount.hashCode),
                 iconBgColor.hashCode),
@@ -112,6 +132,9 @@ class _$User extends User {
           ..add('userName', userName)
           ..add('status', status)
           ..add('picture', picture)
+          ..add('cover', cover)
+          ..add('followerCount', followerCount)
+          ..add('followingCount', followingCount)
           ..add('reputation', reputation)
           ..add('postCount', postCount)
           ..add('iconBgColor', iconBgColor)
@@ -139,6 +162,19 @@ class UserBuilder implements Builder<User, UserBuilder> {
   String _picture;
   String get picture => _$this._picture;
   set picture(String picture) => _$this._picture = picture;
+
+  String _cover;
+  String get cover => _$this._cover;
+  set cover(String cover) => _$this._cover = cover;
+
+  int _followerCount;
+  int get followerCount => _$this._followerCount;
+  set followerCount(int followerCount) => _$this._followerCount = followerCount;
+
+  int _followingCount;
+  int get followingCount => _$this._followingCount;
+  set followingCount(int followingCount) =>
+      _$this._followingCount = followingCount;
 
   int _reputation;
   int get reputation => _$this._reputation;
@@ -168,6 +204,9 @@ class UserBuilder implements Builder<User, UserBuilder> {
       _userName = _$v.userName;
       _status = _$v.status;
       _picture = _$v.picture;
+      _cover = _$v.cover;
+      _followerCount = _$v.followerCount;
+      _followingCount = _$v.followingCount;
       _reputation = _$v.reputation;
       _postCount = _$v.postCount;
       _iconBgColor = _$v.iconBgColor;
@@ -197,6 +236,9 @@ class UserBuilder implements Builder<User, UserBuilder> {
             userName: userName,
             status: status,
             picture: picture,
+            cover: cover,
+            followerCount: followerCount,
+            followingCount: followingCount,
             reputation: reputation,
             postCount: postCount,
             iconBgColor: iconBgColor,
