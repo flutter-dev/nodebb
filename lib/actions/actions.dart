@@ -1,5 +1,4 @@
 library actions;
-import 'package:built_collection/built_collection.dart';
 import 'package:built_redux/built_redux.dart';
 import 'package:nodebb/models/models.dart';
 
@@ -10,6 +9,14 @@ abstract class AppActions extends ReduxActions {
   ActionDispatcher<Null> get fetchTopics;
 
   ActionDispatcher<int> get fetchTopicDetail;
+
+  ActionDispatcher<int> get fetchUser;
+
+  ActionDispatcher<RequestStatus> get updateFetchTopicStatus;
+
+  ActionDispatcher<RequestStatus> get updateFetchTopicDetailStatus;
+
+  ActionDispatcher<RequestStatus> get updateFetchUserStatus;
 
   ActionDispatcher<List<Topic>> get addTopics;
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_built_redux/flutter_built_redux.dart';
+import 'package:nodebb/application/application.dart';
 import 'package:nodebb/models/models.dart';
 import 'package:nodebb/actions/actions.dart';
 import 'package:built_collection/built_collection.dart';
@@ -51,7 +52,7 @@ class TopicList extends StoreConnector<AppState, AppActions, BuiltMap<String, Ob
         leading: new CircleAvatar(
           child: !utils.isEmpty(user?.picture) ? null : new Text('${userEntities[topic.uid].iconText}'),
           backgroundColor: utils.parseColorFromStr(user?.iconBgColor),
-          backgroundImage: utils.isEmpty(user?.picture) ? null : new NetworkImage(user?.picture),
+          backgroundImage: utils.isEmpty(user?.picture) ? null : new NetworkImage('http://${Application.host}${user?.picture}'),
         ),
         title: new Text(topic.title),
         subtitle: new Text('${topic.viewCount} 浏览 · ${topic.postCount - 1} 回复'),

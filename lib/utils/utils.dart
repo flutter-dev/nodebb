@@ -5,6 +5,7 @@ bool isEmpty(val) {
 }
 
 int convertToInteger([num = -1]) {
+  if(null == num) return 0;
   return num.runtimeType == int ? num : int.parse(num);
 }
 
@@ -13,7 +14,17 @@ Color parseColorFromStr([String colorStr = '#000000']) {
   return new Color(colorVal);
 }
 
-//bool routeMatches(String route, String matchesPath) => pathMatcher(route, matchesPath) != null;
+String encodeUriQuery(Map<String, String> query) {
+  if(query == null) return '';
+  StringBuffer sb = new StringBuffer();
+  query.forEach((key, value) {
+    if(sb.length > 0) sb.write('&');
+    sb.write(Uri.encodeQueryComponent(key));
+    sb.write('=');
+    sb.write(Uri.encodeQueryComponent(value));
+  });
+  return sb.toString();
+}
 
 //https://github.com/dartist/express/blob/master/lib/utils.dart
 Map<String,String> pathMatcher(String routePath, String matchesPath){

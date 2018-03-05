@@ -18,7 +18,7 @@ class RemoteService {
     return service;
   }
 
-  setup(String host, {bool security = false}) {
+  setup(String host, [bool security = false]) {
     this._host = host;
     this._security = security;
   }

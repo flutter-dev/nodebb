@@ -59,7 +59,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           child: new TabBarView(
               controller: this._controller,
               children: [
-                new TopicsFragment(key: new ValueKey<String>('SquareFragment')),
+                new TopicsFragment(key: new ValueKey<String>('TopicsFragment')),
                 new MessagesFragment(key: new ValueKey<String>('MessagesFragment')),
                 new PersonalFragment(key: new ValueKey<String>('PersonalFragment'))
               ]

@@ -14,6 +14,15 @@ class _$AppActions extends AppActions {
       new ActionDispatcher<Null>('AppActions-fetchTopics');
   final ActionDispatcher<int> fetchTopicDetail =
       new ActionDispatcher<int>('AppActions-fetchTopicDetail');
+  final ActionDispatcher<int> fetchUser =
+      new ActionDispatcher<int>('AppActions-fetchUser');
+  final ActionDispatcher<RequestStatus> updateFetchTopicStatus =
+      new ActionDispatcher<RequestStatus>('AppActions-updateFetchTopicStatus');
+  final ActionDispatcher<RequestStatus> updateFetchTopicDetailStatus =
+      new ActionDispatcher<RequestStatus>(
+          'AppActions-updateFetchTopicDetailStatus');
+  final ActionDispatcher<RequestStatus> updateFetchUserStatus =
+      new ActionDispatcher<RequestStatus>('AppActions-updateFetchUserStatus');
   final ActionDispatcher<List<Topic>> addTopics =
       new ActionDispatcher<List<Topic>>('AppActions-addTopics');
   final ActionDispatcher<List<User>> addUsers =
@@ -25,6 +34,10 @@ class _$AppActions extends AppActions {
   void setDispatcher(Dispatcher dispatcher) {
     fetchTopics.setDispatcher(dispatcher);
     fetchTopicDetail.setDispatcher(dispatcher);
+    fetchUser.setDispatcher(dispatcher);
+    updateFetchTopicStatus.setDispatcher(dispatcher);
+    updateFetchTopicDetailStatus.setDispatcher(dispatcher);
+    updateFetchUserStatus.setDispatcher(dispatcher);
     addTopics.setDispatcher(dispatcher);
     addUsers.setDispatcher(dispatcher);
     addPosts.setDispatcher(dispatcher);
@@ -36,6 +49,14 @@ class AppActionsNames {
       new ActionName<Null>('AppActions-fetchTopics');
   static final ActionName<int> fetchTopicDetail =
       new ActionName<int>('AppActions-fetchTopicDetail');
+  static final ActionName<int> fetchUser =
+      new ActionName<int>('AppActions-fetchUser');
+  static final ActionName<RequestStatus> updateFetchTopicStatus =
+      new ActionName<RequestStatus>('AppActions-updateFetchTopicStatus');
+  static final ActionName<RequestStatus> updateFetchTopicDetailStatus =
+      new ActionName<RequestStatus>('AppActions-updateFetchTopicDetailStatus');
+  static final ActionName<RequestStatus> updateFetchUserStatus =
+      new ActionName<RequestStatus>('AppActions-updateFetchUserStatus');
   static final ActionName<List<Topic>> addTopics =
       new ActionName<List<Topic>>('AppActions-addTopics');
   static final ActionName<List<User>> addUsers =
