@@ -109,6 +109,5 @@ MiddlewareHandler<AppState, AppStateBuilder, AppActions, int> createFetchUser() 
     } else {
       return;
     }
-
   };
 }
