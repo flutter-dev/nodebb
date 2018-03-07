@@ -7,7 +7,8 @@ var reducerBuilder = new ReducerBuilder<AppState, AppStateBuilder>()
   ..add(AppActionsNames.addUsers, addUsers)
   ..add(AppActionsNames.addPosts, addPosts)
   ..add(AppActionsNames.updateFetchTopicStatus, updateFetchTopicStatus)
-  ..add(AppActionsNames.updateFetchTopicDetailStatus, updateFetchTopicDetailStatus);
+  ..add(AppActionsNames.updateFetchTopicDetailStatus, updateFetchTopicDetailStatus)
+  ..add(AppActionsNames.setActiveUser, setActiveUser);
 
 
 void addTopics(AppState state, Action<List<Topic>> action, AppStateBuilder builder) {
@@ -35,6 +36,11 @@ void addPosts(AppState state, Action<List<Post>> action, AppStateBuilder builder
   posts?.forEach((post) {
     applyCollectionAdd(builder.posts, post.pid, post);
   });
+}
+
+void setActiveUser(AppState state, Action<User> action, AppStateBuilder builder) {
+  builder.activeUser = action.payload.uid;
+  applyCollectionAdd(builder.users, action.payload.uid, action.payload);
 }
 
 void updateFetchTopicStatus(AppState state, Action<RequestStatus> action, AppStateBuilder builder) {

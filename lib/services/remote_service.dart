@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart';
+import 'package:nodebb/utils/utils.dart' as utils;
 
 
 class RemoteService {
@@ -34,11 +35,17 @@ class RemoteService {
   Future<Map> fetchTopics([int start = 0, int count = 20]) async {
     var params = <String, String>{'after': start.toString(), 'count': count.toString()};
     Response res = await get(_buildUrl('/api/mobile/v1/topics', params).toString());
-    return JSON.decode(res.body);
+    return utils.decodeJSON(res.body);
   }
 
   Future<Map> fetchTopicDetail(int tid) async {
     Response res = await get(_buildUrl('/api/mobile/v1/topics/${tid}'));
-    return JSON.decode(res.body);
+    return utils.decodeJSON(res.body);
+  }
+  
+  Future<Map> doLogin(usernameOrEmail, password) async {
+    Response res = await post(_buildUrl('/api/mobile/v1/auth/login'),
+        body: {'username': usernameOrEmail, 'password': password});
+    return utils.decodeJSON(res.body);
   }
 }

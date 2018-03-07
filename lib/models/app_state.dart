@@ -11,6 +11,9 @@ part 'app_state.g.dart';
 
 abstract class AppState implements Built<AppState, AppStateBuilder> {
 
+  @nullable
+  int get activeUser;
+
   Collection<int, Topic> get topics;
 
   Collection<int, User> get users;
@@ -25,7 +28,9 @@ abstract class AppState implements Built<AppState, AppStateBuilder> {
 
   RequestStatus get fetchUserStatus;
 
+  RequestStatus get doLoginStatus;
 
   AppState._();
+
   factory AppState([updates(AppStateBuilder b)]) = _$AppState;
 }

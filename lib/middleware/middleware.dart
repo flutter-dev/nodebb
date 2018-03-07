@@ -8,7 +8,8 @@ import 'package:nodebb/services/remote_service.dart';
 Middleware<AppState, AppStateBuilder, AppActions> createAppStoreMiddleware() {
   return (new MiddlewareBuilder<AppState, AppStateBuilder, AppActions>()
         ..add(AppActionsNames.fetchTopics, createFetchTopics())
-        ..add(AppActionsNames.fetchTopicDetail, createFetchTopicDetail())).build();
+        ..add(AppActionsNames.fetchTopicDetail, createFetchTopicDetail())
+        ..add(AppActionsNames.doLogin, createDoLogin())).build();
 
 }
 
@@ -37,7 +38,7 @@ MiddlewareHandler<AppState, AppStateBuilder, AppActions, Null> createFetchTopics
         ActionHandler next, Action<Null> action) async {
     if(isRequestResolved(api.state.fetchTopicStatus.status)) {
       api.actions.updateFetchTopicStatus(api.state.fetchTopicStatus.rebuild((builder) {
-        builder.status = $RequestStatus.PENDING;
+        builder.status = RequestStatusType.PENDING;
       }));
     } else {
       return;
@@ -54,11 +55,11 @@ MiddlewareHandler<AppState, AppStateBuilder, AppActions, Null> createFetchTopics
       api.actions.addTopics(topics);
       api.actions.addUsers(users);
       api.actions.updateFetchTopicStatus(api.state.fetchTopicStatus.rebuild((builder) {
-        builder.status = $RequestStatus.SUCCESS;
+        builder.status = RequestStatusType.SUCCESS;
       }));
     } catch(e) {
       api.actions.updateFetchTopicStatus(api.state.fetchTopicStatus.rebuild((builder) {
-        builder.status = $RequestStatus.ERROR;
+        builder.status = RequestStatusType.ERROR;
         builder.exception = new Exception(e);
       }));
     }
@@ -70,7 +71,7 @@ MiddlewareHandler<AppState, AppStateBuilder, AppActions, int> createFetchTopicDe
       ActionHandler next, Action<int> action, dispatch) async {
     dispatch(() {
       api.actions.updateFetchTopicDetailStatus(api.state.fetchTopicDetailStatus.rebuild((builder) {
-        builder.status = $RequestStatus.PENDING;
+        builder.status = RequestStatusType.PENDING;
       }));
     });
     try {
@@ -84,13 +85,13 @@ MiddlewareHandler<AppState, AppStateBuilder, AppActions, int> createFetchTopicDe
         }
         api.actions.addPosts(posts);
         api.actions.updateFetchTopicDetailStatus(api.state.fetchTopicDetailStatus.rebuild((builder) {
-          builder.status = $RequestStatus.SUCCESS;
+          builder.status = RequestStatusType.SUCCESS;
         }));
       });
     } catch(e) {
       dispatch(() {
         api.actions.updateFetchTopicDetailStatus(api.state.fetchTopicDetailStatus.rebuild((builder) {
-          builder.status = $RequestStatus.ERROR;
+          builder.status = RequestStatusType.ERROR;
           builder.exception = new Exception(e);
         }));
       });
@@ -98,16 +99,40 @@ MiddlewareHandler<AppState, AppStateBuilder, AppActions, int> createFetchTopicDe
   });
 }
 
-
 MiddlewareHandler<AppState, AppStateBuilder, AppActions, int> createFetchUser() {
   return (MiddlewareApi<AppState, AppStateBuilder, AppActions> api,
       ActionHandler next, Action<int> action) async {
     if(isRequestResolved(api.state.fetchUserStatus.status)) {
       api.actions.updateFetchTopicStatus(api.state.fetchUserStatus.rebuild((builder) {
-        builder.status = $RequestStatus.PENDING;
+        builder.status = RequestStatusType.PENDING;
       }));
     } else {
       return;
+    }
+  };
+}
+
+MiddlewareHandler<AppState, AppStateBuilder, AppActions, Map<String, String>> createDoLogin() {
+  return (MiddlewareApi<AppState, AppStateBuilder, AppActions> api,
+      ActionHandler next, Action<Map<String, String>> action) async {
+    if(isRequestResolved(api.state.doLoginStatus.status)) {
+      api.actions.updateDoLoginStatus(api.state.doLoginStatus.rebuild((builder) {
+        builder.status = RequestStatusType.PENDING;
+      }));
+    } else {
+      return;
+    }
+    try {
+      var data = await RemoteService.getInstance()
+          .doLogin(action.payload['usernameOrEmail'], action.payload['password']);
+      var activeUser = new User.fromMap(data);
+      api.actions.setActiveUser(activeUser);
+      //api.actions.addUsers([activeUser]);
+    } catch(e) {
+      api.actions.updateDoLoginStatus(api.state.doLoginStatus.rebuild((builder) {
+        builder.status = RequestStatusType.ERROR;
+        builder.exception = new Exception(e);
+      }));
     }
   };
 }

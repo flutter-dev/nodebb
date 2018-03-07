@@ -3,12 +3,12 @@ import 'package:built_value/built_value.dart';
 
 part 'request_status.g.dart';
 
-enum $RequestStatus { PENDING, SUCCESS, ERROR }
+enum RequestStatusType { PENDING, SUCCESS, ERROR }
 
 abstract class RequestStatus implements Built<RequestStatus, RequestStatusBuilder> {
 
   @nullable
-  $RequestStatus get status;
+  RequestStatusType get status;
 
   @nullable
   Exception get exception;
@@ -18,6 +18,6 @@ abstract class RequestStatus implements Built<RequestStatus, RequestStatusBuilde
   factory RequestStatus([updates(RequestStatusBuilder b)]) = _$RequestStatus;
 }
 
-bool isRequestResolved($RequestStatus status) {
-  return $RequestStatus.PENDING != status;
+bool isRequestResolved(RequestStatusType status) {
+  return RequestStatusType.PENDING != status;
 }

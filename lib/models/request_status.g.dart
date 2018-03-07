@@ -16,7 +16,7 @@ part of request_status;
 
 class _$RequestStatus extends RequestStatus {
   @override
-  final $RequestStatus status;
+  final RequestStatusType status;
   @override
   final Exception exception;
 
@@ -57,9 +57,9 @@ class RequestStatusBuilder
     implements Builder<RequestStatus, RequestStatusBuilder> {
   _$RequestStatus _$v;
 
-  $RequestStatus _status;
-  $RequestStatus get status => _$this._status;
-  set status($RequestStatus status) => _$this._status = status;
+  RequestStatusType _status;
+  RequestStatusType get status => _$this._status;
+  set status(RequestStatusType status) => _$this._status = status;
 
   Exception _exception;
   Exception get exception => _$this._exception;

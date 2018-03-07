@@ -24,19 +24,20 @@ abstract class User implements Built<User, UserBuilder> {
 
   int get reputation; //声望
 
-  int get postCount; //文章数量
+  int get topicCount; //主题数量
 
   String get iconBgColor;
 
   String get iconText;
 
+  @nullable
   String get signature; //签名
 
   factory User.fromMap(Map user) {
     return new User((UserBuilder builder) {
       builder.userName = user['username'];
       builder.uid = utils.convertToInteger(user['uid']);
-      builder.postCount = user['postcount'];
+      builder.topicCount = user['topiccount'] ?? 0;
       builder.picture = user['picture'];
       builder.reputation = user['reputation'];
       builder.status = user['status'];

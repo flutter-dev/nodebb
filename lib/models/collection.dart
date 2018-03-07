@@ -33,15 +33,17 @@ void applyCollectionAdd(CollectionBuilder b, key, value) {
       b.add(key);
     });
   }
-  b.entities.remove(key);
-  b.entities.putIfAbsent(key, ()=> value);
+  //b.entities.remove(key);
+  //b.entities.putIfAbsent(key, ()=> value);
+  b.entities[key] = value;
 }
 
 
 void applyCollectionUpdate(CollectionBuilder b, key, builder) {
   if(b.entities[key] == null) return;
   Built oldValue = b.entities[key];
-  b.entities.remove(key);
+  //b.entities.remove(key);
   Built newValue = oldValue?.rebuild(builder);
-  b.entities.putIfAbsent(key, ()=> newValue);
+  //b.entities.putIfAbsent(key, ()=> newValue);
+  b.entities[key] = newValue;
 }

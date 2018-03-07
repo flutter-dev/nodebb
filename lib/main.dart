@@ -9,12 +9,6 @@ import 'package:nodebb/views/TopicDetailPage.dart';
 import 'package:nodebb/utils/utils.dart' as utils;
 import 'package:nodebb/application/application.dart';
 
-//import 'dart:io';
-//import 'package:http/http.dart' as http;
-//import 'dart:convert';
-//import 'package:flutter_markdown/flutter_markdown.dart';
-
-
 const APP_TITLE = 'Flutter Dev';
 
 void main() {
@@ -41,9 +35,10 @@ class _AppState extends State<App> {
   void initState() async {
     Application.setup();
     RemoteService.getInstance().setup(Application.host);
-    Application.store.actions.fetchTopics();
-    SocketIOClient client = new SocketIOClient(uri: 'ws://${Application.host}/socket.io/?EIO=3&transport=websocket');
-    SocketIOSocket socket = await client.of();
+//    Application.store.actions.fetchTopics();
+//    SocketIOClient client = new SocketIOClient(uri: 'ws://${Application.host}/socket.io/?EIO=3&transport=websocket');
+//    SocketIOSocket socket = await client.of();
+    Application.store.actions.doLogin({'usernameOrEmail': '波仔', 'password': 'haha12345'});
   }
 
 

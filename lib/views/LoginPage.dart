@@ -44,24 +44,6 @@ class _LoginPageState extends State<LoginPage> {
           }).toList()
         ),
       ),
-//      body: new Center(
-//        child: new Padding(
-//          padding: new EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
-//          child: new Column(
-//            mainAxisAlignment: MainAxisAlignment.center,
-//            children: <Widget>[
-//              new TextField(decoration: new InputDecoration(labelText: '用户名'),),
-//              new TextField(decoration: new InputDecoration(labelText: '密码'),),
-//              new MaterialButton(
-//                color: Colors.blue,
-//                textColor: Colors.white,
-//                onPressed: null,
-//                child: new Text('登录'),
-//              )
-//            ],
-//          ),
-//        )
-//      )
     );
   }
 

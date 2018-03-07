@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 
 bool isEmpty(val) {
@@ -46,4 +48,32 @@ Map<String,String> pathMatcher(String routePath, String matchesPath){
     return params;
   }
   return null;
+}
+
+Map handleNodeBBResponse(String res) {
+  RegExp exp = new RegExp(r"^\[\[(\w+):([a-zA-Z_\-]+)\]\]$");
+  Iterable<Match> matches = exp.allMatches(res);
+  var json;
+  if(matches.first != null) {
+    json = {
+      matches.first.group(1): matches.first.group(2)
+    };
+  }
+  return json;
+}
+
+Map decodeJSON(String data) {
+  var json;
+  try {
+    json = JSON.decode(data);
+  } catch(e) {
+   json = handleNodeBBResponse(data);
+   if(json == null) {
+     throw e;
+   }
+   if(json['error'] != null) {
+     throw new Exception(data);
+   }
+  }
+  return json;
 }

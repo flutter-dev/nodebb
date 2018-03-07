@@ -64,10 +64,10 @@ class TopicContent extends StoreConnector<AppState, AppActions, BuiltMap<String,
     var fetchTopicDetailStatus = localState['fetchTopicDetailStatus'] as RequestStatus;
     Widget child;
     switch(fetchTopicDetailStatus.status) {
-      case $RequestStatus.SUCCESS:
+      case RequestStatusType.SUCCESS:
         child = new Markdown(data: content);
         break;
-      case $RequestStatus.ERROR:
+      case RequestStatusType.ERROR:
         child = new Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
@@ -85,7 +85,7 @@ class TopicContent extends StoreConnector<AppState, AppActions, BuiltMap<String,
           ],
         );
         break;
-      case $RequestStatus.PENDING:
+      case RequestStatusType.PENDING:
       default:
         child = new Text('加载中...');
     }

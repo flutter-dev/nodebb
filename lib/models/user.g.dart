@@ -32,7 +32,7 @@ class _$User extends User {
   @override
   final int reputation;
   @override
-  final int postCount;
+  final int topicCount;
   @override
   final String iconBgColor;
   @override
@@ -52,7 +52,7 @@ class _$User extends User {
       this.followerCount,
       this.followingCount,
       this.reputation,
-      this.postCount,
+      this.topicCount,
       this.iconBgColor,
       this.iconText,
       this.signature})
@@ -64,14 +64,12 @@ class _$User extends User {
     if (picture == null) throw new BuiltValueNullFieldError('User', 'picture');
     if (reputation == null)
       throw new BuiltValueNullFieldError('User', 'reputation');
-    if (postCount == null)
-      throw new BuiltValueNullFieldError('User', 'postCount');
+    if (topicCount == null)
+      throw new BuiltValueNullFieldError('User', 'topicCount');
     if (iconBgColor == null)
       throw new BuiltValueNullFieldError('User', 'iconBgColor');
     if (iconText == null)
       throw new BuiltValueNullFieldError('User', 'iconText');
-    if (signature == null)
-      throw new BuiltValueNullFieldError('User', 'signature');
   }
 
   @override
@@ -93,7 +91,7 @@ class _$User extends User {
         followerCount == other.followerCount &&
         followingCount == other.followingCount &&
         reputation == other.reputation &&
-        postCount == other.postCount &&
+        topicCount == other.topicCount &&
         iconBgColor == other.iconBgColor &&
         iconText == other.iconText &&
         signature == other.signature;
@@ -119,7 +117,7 @@ class _$User extends User {
                                 followerCount.hashCode),
                             followingCount.hashCode),
                         reputation.hashCode),
-                    postCount.hashCode),
+                    topicCount.hashCode),
                 iconBgColor.hashCode),
             iconText.hashCode),
         signature.hashCode));
@@ -136,7 +134,7 @@ class _$User extends User {
           ..add('followerCount', followerCount)
           ..add('followingCount', followingCount)
           ..add('reputation', reputation)
-          ..add('postCount', postCount)
+          ..add('topicCount', topicCount)
           ..add('iconBgColor', iconBgColor)
           ..add('iconText', iconText)
           ..add('signature', signature))
@@ -180,9 +178,9 @@ class UserBuilder implements Builder<User, UserBuilder> {
   int get reputation => _$this._reputation;
   set reputation(int reputation) => _$this._reputation = reputation;
 
-  int _postCount;
-  int get postCount => _$this._postCount;
-  set postCount(int postCount) => _$this._postCount = postCount;
+  int _topicCount;
+  int get topicCount => _$this._topicCount;
+  set topicCount(int topicCount) => _$this._topicCount = topicCount;
 
   String _iconBgColor;
   String get iconBgColor => _$this._iconBgColor;
@@ -208,7 +206,7 @@ class UserBuilder implements Builder<User, UserBuilder> {
       _followerCount = _$v.followerCount;
       _followingCount = _$v.followingCount;
       _reputation = _$v.reputation;
-      _postCount = _$v.postCount;
+      _topicCount = _$v.topicCount;
       _iconBgColor = _$v.iconBgColor;
       _iconText = _$v.iconText;
       _signature = _$v.signature;
@@ -240,7 +238,7 @@ class UserBuilder implements Builder<User, UserBuilder> {
             followerCount: followerCount,
             followingCount: followingCount,
             reputation: reputation,
-            postCount: postCount,
+            topicCount: topicCount,
             iconBgColor: iconBgColor,
             iconText: iconText,
             signature: signature);

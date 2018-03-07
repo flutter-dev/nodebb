@@ -16,6 +16,8 @@ part of app_state;
 
 class _$AppState extends AppState {
   @override
+  final int activeUser;
+  @override
   final Collection<int, Topic> topics;
   @override
   final Collection<int, User> users;
@@ -29,18 +31,22 @@ class _$AppState extends AppState {
   final RequestStatus fetchTopicDetailStatus;
   @override
   final RequestStatus fetchUserStatus;
+  @override
+  final RequestStatus doLoginStatus;
 
   factory _$AppState([void updates(AppStateBuilder b)]) =>
       (new AppStateBuilder()..update(updates)).build();
 
   _$AppState._(
-      {this.topics,
+      {this.activeUser,
+      this.topics,
       this.users,
       this.categories,
       this.posts,
       this.fetchTopicStatus,
       this.fetchTopicDetailStatus,
-      this.fetchUserStatus})
+      this.fetchUserStatus,
+      this.doLoginStatus})
       : super._() {
     if (topics == null)
       throw new BuiltValueNullFieldError('AppState', 'topics');
@@ -54,6 +60,8 @@ class _$AppState extends AppState {
       throw new BuiltValueNullFieldError('AppState', 'fetchTopicDetailStatus');
     if (fetchUserStatus == null)
       throw new BuiltValueNullFieldError('AppState', 'fetchUserStatus');
+    if (doLoginStatus == null)
+      throw new BuiltValueNullFieldError('AppState', 'doLoginStatus');
   }
 
   @override
@@ -67,13 +75,15 @@ class _$AppState extends AppState {
   bool operator ==(dynamic other) {
     if (identical(other, this)) return true;
     if (other is! AppState) return false;
-    return topics == other.topics &&
+    return activeUser == other.activeUser &&
+        topics == other.topics &&
         users == other.users &&
         categories == other.categories &&
         posts == other.posts &&
         fetchTopicStatus == other.fetchTopicStatus &&
         fetchTopicDetailStatus == other.fetchTopicDetailStatus &&
-        fetchUserStatus == other.fetchUserStatus;
+        fetchUserStatus == other.fetchUserStatus &&
+        doLoginStatus == other.doLoginStatus;
   }
 
   @override
@@ -82,30 +92,42 @@ class _$AppState extends AppState {
         $jc(
             $jc(
                 $jc(
-                    $jc($jc($jc(0, topics.hashCode), users.hashCode),
-                        categories.hashCode),
-                    posts.hashCode),
-                fetchTopicStatus.hashCode),
-            fetchTopicDetailStatus.hashCode),
-        fetchUserStatus.hashCode));
+                    $jc(
+                        $jc(
+                            $jc(
+                                $jc($jc(0, activeUser.hashCode),
+                                    topics.hashCode),
+                                users.hashCode),
+                            categories.hashCode),
+                        posts.hashCode),
+                    fetchTopicStatus.hashCode),
+                fetchTopicDetailStatus.hashCode),
+            fetchUserStatus.hashCode),
+        doLoginStatus.hashCode));
   }
 
   @override
   String toString() {
     return (newBuiltValueToStringHelper('AppState')
+          ..add('activeUser', activeUser)
           ..add('topics', topics)
           ..add('users', users)
           ..add('categories', categories)
           ..add('posts', posts)
           ..add('fetchTopicStatus', fetchTopicStatus)
           ..add('fetchTopicDetailStatus', fetchTopicDetailStatus)
-          ..add('fetchUserStatus', fetchUserStatus))
+          ..add('fetchUserStatus', fetchUserStatus)
+          ..add('doLoginStatus', doLoginStatus))
         .toString();
   }
 }
 
 class AppStateBuilder implements Builder<AppState, AppStateBuilder> {
   _$AppState _$v;
+
+  int _activeUser;
+  int get activeUser => _$this._activeUser;
+  set activeUser(int activeUser) => _$this._activeUser = activeUser;
 
   CollectionBuilder<int, Topic> _topics;
   CollectionBuilder<int, Topic> get topics =>
@@ -146,10 +168,17 @@ class AppStateBuilder implements Builder<AppState, AppStateBuilder> {
   set fetchUserStatus(RequestStatusBuilder fetchUserStatus) =>
       _$this._fetchUserStatus = fetchUserStatus;
 
+  RequestStatusBuilder _doLoginStatus;
+  RequestStatusBuilder get doLoginStatus =>
+      _$this._doLoginStatus ??= new RequestStatusBuilder();
+  set doLoginStatus(RequestStatusBuilder doLoginStatus) =>
+      _$this._doLoginStatus = doLoginStatus;
+
   AppStateBuilder();
 
   AppStateBuilder get _$this {
     if (_$v != null) {
+      _activeUser = _$v.activeUser;
       _topics = _$v.topics?.toBuilder();
       _users = _$v.users?.toBuilder();
       _categories = _$v.categories?.toBuilder();
@@ -157,6 +186,7 @@ class AppStateBuilder implements Builder<AppState, AppStateBuilder> {
       _fetchTopicStatus = _$v.fetchTopicStatus?.toBuilder();
       _fetchTopicDetailStatus = _$v.fetchTopicDetailStatus?.toBuilder();
       _fetchUserStatus = _$v.fetchUserStatus?.toBuilder();
+      _doLoginStatus = _$v.doLoginStatus?.toBuilder();
       _$v = null;
     }
     return this;
@@ -179,13 +209,15 @@ class AppStateBuilder implements Builder<AppState, AppStateBuilder> {
     try {
       _$result = _$v ??
           new _$AppState._(
+              activeUser: activeUser,
               topics: topics.build(),
               users: users.build(),
               categories: categories.build(),
               posts: posts.build(),
               fetchTopicStatus: fetchTopicStatus.build(),
               fetchTopicDetailStatus: fetchTopicDetailStatus.build(),
-              fetchUserStatus: fetchUserStatus.build());
+              fetchUserStatus: fetchUserStatus.build(),
+              doLoginStatus: doLoginStatus.build());
     } catch (_) {
       String _$failedField;
       try {
@@ -203,6 +235,8 @@ class AppStateBuilder implements Builder<AppState, AppStateBuilder> {
         fetchTopicDetailStatus.build();
         _$failedField = 'fetchUserStatus';
         fetchUserStatus.build();
+        _$failedField = 'doLoginStatus';
+        doLoginStatus.build();
       } catch (e) {
         throw new BuiltValueNestedFieldError(
             'AppState', _$failedField, e.toString());

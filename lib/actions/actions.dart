@@ -12,17 +12,23 @@ abstract class AppActions extends ReduxActions {
 
   ActionDispatcher<int> get fetchUser;
 
+  ActionDispatcher<Map<String, String>> get doLogin;
+
   ActionDispatcher<RequestStatus> get updateFetchTopicStatus;
 
   ActionDispatcher<RequestStatus> get updateFetchTopicDetailStatus;
 
   ActionDispatcher<RequestStatus> get updateFetchUserStatus;
 
+  ActionDispatcher<RequestStatus> get updateDoLoginStatus;
+
   ActionDispatcher<List<Topic>> get addTopics;
 
   ActionDispatcher<List<User>> get addUsers;
 
   ActionDispatcher<List<Post>> get addPosts;
+
+  ActionDispatcher<User> get setActiveUser;
 
   AppActions._();
 
