@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_built_redux/flutter_built_redux.dart';
-import 'package:nodebb/services/remote_service.dart';
-import 'package:nodebb/socket_io/socket_io.dart';
-import 'package:nodebb/views/HomePage.dart';
-import 'package:nodebb/views/LoginPage.dart';
-import 'package:nodebb/views/RegisterPage.dart';
-import 'package:nodebb/views/TopicDetailPage.dart';
-import 'package:nodebb/utils/utils.dart' as utils;
+import 'package:flutter_wills/flutter_wills.dart';
 import 'package:nodebb/application/application.dart';
+import 'package:nodebb/models/models.dart';
+import 'package:nodebb/services/remote_service.dart';
+import 'package:nodebb/utils/utils.dart' as utils;
+import 'package:nodebb/views/home_page.dart';
+import 'package:nodebb/views/login_page.dart';
+import 'package:nodebb/views/register_page.dart';
+import 'package:nodebb/views/topic_detail_page.dart';
+import 'package:nodebb/actions/actions.dart';
 
 const APP_TITLE = 'Flutter Dev';
 
@@ -29,16 +30,21 @@ class _AppState extends State<App> {
 
   final Map _routes = {};
 
+  Store<AppState> store;
+
   bool hasSetupRoutes = false;
 
   @override
-  void initState() async {
+  void initState() { //initState不要使用async 这样会令initState后于build方法触发
     Application.setup();
     RemoteService.getInstance().setup(Application.host);
-//    Application.store.actions.fetchTopics();
-//    SocketIOClient client = new SocketIOClient(uri: 'ws://${Application.host}/socket.io/?EIO=3&transport=websocket');
-//    SocketIOSocket socket = await client.of();
-    Application.store.actions.doLogin({'usernameOrEmail': '波仔', 'password': 'haha12345'});
+    store = new Store<AppState>(state: new AppState(
+      topics: new ObservableMap.linked(),
+      categories: new ObservableMap.linked(),
+      users: new ObservableMap.linked()
+    ));
+
+    store.dispatch(new FetchTopicsAction());
   }
 
 
@@ -92,14 +98,14 @@ class _AppState extends State<App> {
 
   @override
   Widget build(BuildContext context) {
-    return new ReduxProvider(
-      store: Application.store,
-      child: new MaterialApp(
-        title: APP_TITLE,
-        theme: new ThemeData.light(),
-        initialRoute: '/login',
-        onGenerateRoute: _generateRoute,
-      )
+    return new WillsProvider(
+        store: store,
+        child: new MaterialApp(
+          title: APP_TITLE,
+          theme: new ThemeData.light(),
+          initialRoute: '/',
+          onGenerateRoute: _generateRoute,
+        )
     );
   }
 }

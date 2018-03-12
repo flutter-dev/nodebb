@@ -10,3 +10,4 @@ packages
 .flutter-plugins
 $cachePath
 *.log
+pubspec.lock

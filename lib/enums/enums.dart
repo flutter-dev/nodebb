@@ -1,0 +1,1 @@
+enum RequestStatus { PENDING, ERROR, SUCCESS }

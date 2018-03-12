@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:nodebb/errors/errors.dart';
 
 bool isEmpty(val) {
   return val == null || val == '';
@@ -62,6 +63,15 @@ Map handleNodeBBResponse(String res) {
   return json;
 }
 
+_throwException(reason) {
+  switch(reason) {
+    case 'invalid-login-credentials':
+    case 'invalid-username-or-password':
+      throw new NodeBBLoginFailException(reason);
+      break;
+  }
+}
+
 Map decodeJSON(String data) {
   var json;
   try {
@@ -72,7 +82,7 @@ Map decodeJSON(String data) {
      throw e;
    }
    if(json['error'] != null) {
-     throw new Exception(data);
+     _throwException(json['error']);
    }
   }
   return json;
