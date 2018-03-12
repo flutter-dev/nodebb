@@ -1,36 +1,48 @@
-library actions;
-import 'package:built_redux/built_redux.dart';
+import 'dart:async';
+
+import 'package:flutter_wills/flutter_wills.dart';
 import 'package:nodebb/models/models.dart';
+import 'package:nodebb/services/remote_service.dart';
+import 'package:nodebb/mutations/mutations.dart';
 
-part 'actions.g.dart';
+abstract class BaseRunLastAction<S> extends WillsRunLastAction<Store<AppState>, S> {}
 
-abstract class AppActions extends ReduxActions {
-  //这里泛型是传递给action playload类型
-  ActionDispatcher<Null> get fetchTopics;
+abstract class BaseRunUniqueAction<S> extends WillsRunUniqueAction<Store<AppState>, S> {}
 
-  ActionDispatcher<int> get fetchTopicDetail;
+class FetchTopicsAction extends BaseRunLastAction<dynamic> {
 
-  ActionDispatcher<int> get fetchUser;
+  @override
+  Stream exec() async* {
+    var data;
+    yield data = await RemoteService.getInstance().fetchTopics();
+    List topicsFromData = data['topics'] ?? [];
+    var users = new List<User>();
+    var topics = new List<Topic>();
+    for(var topic in topicsFromData) {
+      topics.add(new Topic.fromMap(topic));
+      users.add(new User.fromMap(topic['user']));
+    }
+    $store.commit(new AddUsersMutation(users));
+    $store.commit(new AddTopicsMutation(topics));
+  }
 
-  ActionDispatcher<Map<String, String>> get doLogin;
+}
 
-  ActionDispatcher<RequestStatus> get updateFetchTopicStatus;
 
-  ActionDispatcher<RequestStatus> get updateFetchTopicDetailStatus;
+class LoginAction extends BaseRunUniqueAction<User> {
 
-  ActionDispatcher<RequestStatus> get updateFetchUserStatus;
+  String username;
 
-  ActionDispatcher<RequestStatus> get updateDoLoginStatus;
+  String password;
 
-  ActionDispatcher<List<Topic>> get addTopics;
+  LoginAction(this.username, this.password);
 
-  ActionDispatcher<List<User>> get addUsers;
-
-  ActionDispatcher<List<Post>> get addPosts;
-
-  ActionDispatcher<User> get setActiveUser;
-
-  AppActions._();
-
-  factory AppActions() => new _$AppActions();
+  @override
+  Stream exec() async* {
+    var data;
+    yield data = await RemoteService.getInstance().doLogin(username, password);
+    User user = new User.fromMap(data);
+    $store.commit(new SetActiveUserMutation(user));
+    yield user;
+  }
 }

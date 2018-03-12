@@ -1,52 +1,54 @@
 library topic;
-import 'package:built_value/built_value.dart';
-import 'package:built_collection/built_collection.dart';
+import 'package:flutter_wills_gen/wills.dart';
+import 'package:flutter_wills/flutter_wills.dart';
 import 'package:nodebb/utils/utils.dart' as utils;
 part 'topic.g.dart';
 
-abstract class Topic implements Built<Topic, TopicBuilder> {
+@wills
+abstract class Topic extends Object with Reactive {
 
-  int get cid; //分类 ID
+  int cid; //分类 ID
 
-  int get tid; //Topic ID
+  int tid; //Topic ID
 
-  int get uid; //用户 ID
+  int uid; //用户 ID
 
-  bool get isOwner;
+  bool isOwner;
 
-  String get title;
+  String title;
 
-  DateTime get lastPostTime; //最后回复
+  DateTime lastPostTime; //最后回复
 
-  int get postCount;
+  int postCount;
 
-  DateTime get timestamp; //发布时间
+  DateTime timestamp; //发布时间
 
-  int get viewCount; //阅读次数
+  int viewCount; //阅读次数
 
-  int get upVotes; //点赞
+  int upVotes; //点赞
 
-  int get downVotes; //踩
+  int downVotes; //踩
 
-  @nullable
-  BuiltList<int> get posts; //posts
+  ObservableList<int> posts; //posts
 
-  factory Topic.fromMap(Map topic) {
-    return new Topic((TopicBuilder builder) {
-      builder.tid = utils.convertToInteger(topic['tid']);
-      builder.isOwner = topic['isOwner'];
-      builder.cid =  utils.convertToInteger(topic['cid']);
-      builder.lastPostTime = new DateTime.fromMicrosecondsSinceEpoch(topic['lastposttime']);
-      builder.downVotes = topic['downvotes'];
-      builder.upVotes = topic['upvotes'];
-      builder.timestamp = new DateTime.fromMicrosecondsSinceEpoch(topic['timestamp']);
-      builder.postCount = topic['postcount'];
-      builder.viewCount = topic['viewcount'];
-      builder.title = topic['title'];
-      builder.uid = utils.convertToInteger(topic['uid']);
-    });
+  Topic.$();
+
+  factory Topic.fromMap(Map map) {
+    Topic topic = new  _$Topic(
+      tid: utils.convertToInteger(map['tid']),
+      isOwner: map['isOwner'],
+      cid: utils.convertToInteger(map['cid']),
+      lastPostTime: new DateTime.fromMicrosecondsSinceEpoch(map['lastposttime']),
+      downVotes: map['downvotes'],
+      upVotes: map['upvotes'],
+      timestamp: new DateTime.fromMicrosecondsSinceEpoch(map['timestamp']),
+      postCount: map['postcount'],
+      viewCount: map['viewcount'],
+      title: map['title'],
+      uid: utils.convertToInteger(map['uid'])
+    );
+    return topic;
   }
 
-  Topic._();
-  factory Topic([updates(TopicBuilder b)]) = _$Topic;
+  factory Topic() = _$Topic;
 }

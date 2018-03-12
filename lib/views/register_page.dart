@@ -1,6 +1,6 @@
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/widgets.dart';
-import 'package:nodebb/views/BasePage.dart';
+import 'package:nodebb/views/base.dart';
 
 class RegisterPage extends BasePage {
   RegisterPage({Key key}) : super(key: key);

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:nodebb/views/BasePage.dart';
-import 'package:nodebb/views/TopicsFragment.dart';
-import 'package:nodebb/views/MessagesFragment.dart';
-import 'package:nodebb/views/PersonalFragment.dart';
+import 'package:nodebb/views/base.dart';
+import 'package:nodebb/views/topics_fragment.dart';
+import 'package:nodebb/views/messages_fragment.dart';
+import 'package:nodebb/views/personal_fragment.dart';
 
 
 class HomePage extends BasePage {
@@ -29,6 +29,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       });
     });
   }
+
 
   BottomNavigationBar _buildBottomNavBar() {
     return new BottomNavigationBar(

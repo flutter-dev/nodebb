@@ -3,262 +3,205 @@
 part of topic;
 
 // **************************************************************************
-// Generator: BuiltValueGenerator
+// Generator: WillsGenerator
 // **************************************************************************
 
-// ignore_for_file: always_put_control_body_on_new_line
-// ignore_for_file: annotate_overrides
-// ignore_for_file: avoid_annotating_with_dynamic
-// ignore_for_file: avoid_returning_this
-// ignore_for_file: omit_local_variable_types
-// ignore_for_file: prefer_expression_function_bodies
-// ignore_for_file: sort_constructors_first
-
 class _$Topic extends Topic {
-  @override
-  final int cid;
-  @override
-  final int tid;
-  @override
-  final int uid;
-  @override
-  final bool isOwner;
-  @override
-  final String title;
-  @override
-  final DateTime lastPostTime;
-  @override
-  final int postCount;
-  @override
-  final DateTime timestamp;
-  @override
-  final int viewCount;
-  @override
-  final int upVotes;
-  @override
-  final int downVotes;
-  @override
-  final BuiltList<int> posts;
-
-  factory _$Topic([void updates(TopicBuilder b)]) =>
-      (new TopicBuilder()..update(updates)).build();
-
-  _$Topic._(
-      {this.cid,
-      this.tid,
-      this.uid,
-      this.isOwner,
-      this.title,
-      this.lastPostTime,
-      this.postCount,
-      this.timestamp,
-      this.viewCount,
-      this.upVotes,
-      this.downVotes,
-      this.posts})
-      : super._() {
-    if (cid == null) throw new BuiltValueNullFieldError('Topic', 'cid');
-    if (tid == null) throw new BuiltValueNullFieldError('Topic', 'tid');
-    if (uid == null) throw new BuiltValueNullFieldError('Topic', 'uid');
-    if (isOwner == null) throw new BuiltValueNullFieldError('Topic', 'isOwner');
-    if (title == null) throw new BuiltValueNullFieldError('Topic', 'title');
-    if (lastPostTime == null)
-      throw new BuiltValueNullFieldError('Topic', 'lastPostTime');
-    if (postCount == null)
-      throw new BuiltValueNullFieldError('Topic', 'postCount');
-    if (timestamp == null)
-      throw new BuiltValueNullFieldError('Topic', 'timestamp');
-    if (viewCount == null)
-      throw new BuiltValueNullFieldError('Topic', 'viewCount');
-    if (upVotes == null) throw new BuiltValueNullFieldError('Topic', 'upVotes');
-    if (downVotes == null)
-      throw new BuiltValueNullFieldError('Topic', 'downVotes');
-  }
-
-  @override
-  Topic rebuild(void updates(TopicBuilder b)) =>
-      (toBuilder()..update(updates)).build();
-
-  @override
-  TopicBuilder toBuilder() => new TopicBuilder()..replace(this);
-
-  @override
-  bool operator ==(dynamic other) {
-    if (identical(other, this)) return true;
-    if (other is! Topic) return false;
-    return cid == other.cid &&
-        tid == other.tid &&
-        uid == other.uid &&
-        isOwner == other.isOwner &&
-        title == other.title &&
-        lastPostTime == other.lastPostTime &&
-        postCount == other.postCount &&
-        timestamp == other.timestamp &&
-        viewCount == other.viewCount &&
-        upVotes == other.upVotes &&
-        downVotes == other.downVotes &&
-        posts == other.posts;
-  }
-
-  @override
-  int get hashCode {
-    return $jf($jc(
-        $jc(
-            $jc(
-                $jc(
-                    $jc(
-                        $jc(
-                            $jc(
-                                $jc(
-                                    $jc(
-                                        $jc(
-                                            $jc($jc(0, cid.hashCode),
-                                                tid.hashCode),
-                                            uid.hashCode),
-                                        isOwner.hashCode),
-                                    title.hashCode),
-                                lastPostTime.hashCode),
-                            postCount.hashCode),
-                        timestamp.hashCode),
-                    viewCount.hashCode),
-                upVotes.hashCode),
-            downVotes.hashCode),
-        posts.hashCode));
-  }
-
-  @override
-  String toString() {
-    return (newBuiltValueToStringHelper('Topic')
-          ..add('cid', cid)
-          ..add('tid', tid)
-          ..add('uid', uid)
-          ..add('isOwner', isOwner)
-          ..add('title', title)
-          ..add('lastPostTime', lastPostTime)
-          ..add('postCount', postCount)
-          ..add('timestamp', timestamp)
-          ..add('viewCount', viewCount)
-          ..add('upVotes', upVotes)
-          ..add('downVotes', downVotes)
-          ..add('posts', posts))
-        .toString();
-  }
-}
-
-class TopicBuilder implements Builder<Topic, TopicBuilder> {
-  _$Topic _$v;
-
   int _cid;
-  int get cid => _$this._cid;
-  set cid(int cid) => _$this._cid = cid;
+  int get cid {
+    $observe('cid');
+    _cid = _cid ?? 0;
+    $checkType(_cid);
+    return _cid;
+  }
+
+  set cid(int cid) {
+    if (cid != null && cid == _cid) return;
+    _cid = cid;
+    $notify('cid');
+  }
 
   int _tid;
-  int get tid => _$this._tid;
-  set tid(int tid) => _$this._tid = tid;
+  int get tid {
+    $observe('tid');
+    _tid = _tid ?? 0;
+    $checkType(_tid);
+    return _tid;
+  }
+
+  set tid(int tid) {
+    if (tid != null && tid == _tid) return;
+    _tid = tid;
+    $notify('tid');
+  }
 
   int _uid;
-  int get uid => _$this._uid;
-  set uid(int uid) => _$this._uid = uid;
+  int get uid {
+    $observe('uid');
+    _uid = _uid ?? 0;
+    $checkType(_uid);
+    return _uid;
+  }
+
+  set uid(int uid) {
+    if (uid != null && uid == _uid) return;
+    _uid = uid;
+    $notify('uid');
+  }
 
   bool _isOwner;
-  bool get isOwner => _$this._isOwner;
-  set isOwner(bool isOwner) => _$this._isOwner = isOwner;
+  bool get isOwner {
+    $observe('isOwner');
+    _isOwner = _isOwner ?? false;
+    $checkType(_isOwner);
+    return _isOwner;
+  }
+
+  set isOwner(bool isOwner) {
+    if (isOwner != null && isOwner == _isOwner) return;
+    _isOwner = isOwner;
+    $notify('isOwner');
+  }
 
   String _title;
-  String get title => _$this._title;
-  set title(String title) => _$this._title = title;
+  String get title {
+    $observe('title');
+    _title = _title ?? '';
+    $checkType(_title);
+    return _title;
+  }
+
+  set title(String title) {
+    if (title != null && title == _title) return;
+    _title = title;
+    $notify('title');
+  }
 
   DateTime _lastPostTime;
-  DateTime get lastPostTime => _$this._lastPostTime;
-  set lastPostTime(DateTime lastPostTime) =>
-      _$this._lastPostTime = lastPostTime;
+  DateTime get lastPostTime {
+    $observe('lastPostTime');
+
+    $checkType(_lastPostTime);
+    return _lastPostTime;
+  }
+
+  set lastPostTime(DateTime lastPostTime) {
+    if (lastPostTime != null && lastPostTime == _lastPostTime) return;
+    _lastPostTime = lastPostTime;
+    $notify('lastPostTime');
+  }
 
   int _postCount;
-  int get postCount => _$this._postCount;
-  set postCount(int postCount) => _$this._postCount = postCount;
+  int get postCount {
+    $observe('postCount');
+    _postCount = _postCount ?? 0;
+    $checkType(_postCount);
+    return _postCount;
+  }
+
+  set postCount(int postCount) {
+    if (postCount != null && postCount == _postCount) return;
+    _postCount = postCount;
+    $notify('postCount');
+  }
 
   DateTime _timestamp;
-  DateTime get timestamp => _$this._timestamp;
-  set timestamp(DateTime timestamp) => _$this._timestamp = timestamp;
+  DateTime get timestamp {
+    $observe('timestamp');
+
+    $checkType(_timestamp);
+    return _timestamp;
+  }
+
+  set timestamp(DateTime timestamp) {
+    if (timestamp != null && timestamp == _timestamp) return;
+    _timestamp = timestamp;
+    $notify('timestamp');
+  }
 
   int _viewCount;
-  int get viewCount => _$this._viewCount;
-  set viewCount(int viewCount) => _$this._viewCount = viewCount;
+  int get viewCount {
+    $observe('viewCount');
+    _viewCount = _viewCount ?? 0;
+    $checkType(_viewCount);
+    return _viewCount;
+  }
+
+  set viewCount(int viewCount) {
+    if (viewCount != null && viewCount == _viewCount) return;
+    _viewCount = viewCount;
+    $notify('viewCount');
+  }
 
   int _upVotes;
-  int get upVotes => _$this._upVotes;
-  set upVotes(int upVotes) => _$this._upVotes = upVotes;
+  int get upVotes {
+    $observe('upVotes');
+    _upVotes = _upVotes ?? 0;
+    $checkType(_upVotes);
+    return _upVotes;
+  }
+
+  set upVotes(int upVotes) {
+    if (upVotes != null && upVotes == _upVotes) return;
+    _upVotes = upVotes;
+    $notify('upVotes');
+  }
 
   int _downVotes;
-  int get downVotes => _$this._downVotes;
-  set downVotes(int downVotes) => _$this._downVotes = downVotes;
-
-  ListBuilder<int> _posts;
-  ListBuilder<int> get posts => _$this._posts ??= new ListBuilder<int>();
-  set posts(ListBuilder<int> posts) => _$this._posts = posts;
-
-  TopicBuilder();
-
-  TopicBuilder get _$this {
-    if (_$v != null) {
-      _cid = _$v.cid;
-      _tid = _$v.tid;
-      _uid = _$v.uid;
-      _isOwner = _$v.isOwner;
-      _title = _$v.title;
-      _lastPostTime = _$v.lastPostTime;
-      _postCount = _$v.postCount;
-      _timestamp = _$v.timestamp;
-      _viewCount = _$v.viewCount;
-      _upVotes = _$v.upVotes;
-      _downVotes = _$v.downVotes;
-      _posts = _$v.posts?.toBuilder();
-      _$v = null;
-    }
-    return this;
+  int get downVotes {
+    $observe('downVotes');
+    _downVotes = _downVotes ?? 0;
+    $checkType(_downVotes);
+    return _downVotes;
   }
 
-  @override
-  void replace(Topic other) {
-    if (other == null) throw new ArgumentError.notNull('other');
-    _$v = other as _$Topic;
+  set downVotes(int downVotes) {
+    if (downVotes != null && downVotes == _downVotes) return;
+    _downVotes = downVotes;
+    $notify('downVotes');
   }
 
-  @override
-  void update(void updates(TopicBuilder b)) {
-    if (updates != null) updates(this);
+  ObservableList<int> _posts;
+  ObservableList<int> get posts {
+    $observe('posts');
+
+    $checkType(_posts);
+    return _posts;
   }
 
-  @override
-  _$Topic build() {
-    _$Topic _$result;
-    try {
-      _$result = _$v ??
-          new _$Topic._(
-              cid: cid,
-              tid: tid,
-              uid: uid,
-              isOwner: isOwner,
-              title: title,
-              lastPostTime: lastPostTime,
-              postCount: postCount,
-              timestamp: timestamp,
-              viewCount: viewCount,
-              upVotes: upVotes,
-              downVotes: downVotes,
-              posts: _posts?.build());
-    } catch (_) {
-      String _$failedField;
-      try {
-        _$failedField = 'posts';
-        _posts?.build();
-      } catch (e) {
-        throw new BuiltValueNestedFieldError(
-            'Topic', _$failedField, e.toString());
-      }
-      rethrow;
-    }
-    replace(_$result);
-    return _$result;
+  set posts(ObservableList<int> posts) {
+    if (posts != null && posts == _posts) return;
+    _posts = posts;
+    $notify('posts');
+  }
+
+  _$Topic.$() : super.$();
+  factory _$Topic({
+    int cid: 0,
+    int tid: 0,
+    int uid: 0,
+    bool isOwner: false,
+    String title: '',
+    DateTime lastPostTime,
+    int postCount: 0,
+    DateTime timestamp,
+    int viewCount: 0,
+    int upVotes: 0,
+    int downVotes: 0,
+    ObservableList<int> posts,
+  }) {
+    return new _$Topic.$()
+      .._cid = cid
+      .._tid = tid
+      .._uid = uid
+      .._isOwner = isOwner
+      .._title = title
+      .._lastPostTime = lastPostTime
+      .._postCount = postCount
+      .._timestamp = timestamp
+      .._viewCount = viewCount
+      .._upVotes = upVotes
+      .._downVotes = downVotes
+      .._posts = posts;
   }
 }

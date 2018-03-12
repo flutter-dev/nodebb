@@ -1,9 +1,12 @@
 library user;
-import 'package:built_value/built_value.dart';
+import 'package:flutter_wills_gen/wills.dart';
+import 'package:flutter_wills/flutter_wills.dart';
 import 'package:nodebb/utils/utils.dart' as utils;
+
 part 'user.g.dart';
 
-abstract class User implements Built<User, UserBuilder> {
+@wills
+abstract class User extends Object with Reactive {
 
   int get uid;
 
@@ -13,13 +16,10 @@ abstract class User implements Built<User, UserBuilder> {
 
   String get picture;
 
-  @nullable
   String get cover; //封面
 
-  @nullable
   int get followerCount; //粉丝
 
-  @nullable
   int get followingCount; //关注
 
   int get reputation; //声望
@@ -30,27 +30,27 @@ abstract class User implements Built<User, UserBuilder> {
 
   String get iconText;
 
-  @nullable
   String get signature; //签名
 
-  factory User.fromMap(Map user) {
-    return new User((UserBuilder builder) {
-      builder.userName = user['username'];
-      builder.uid = utils.convertToInteger(user['uid']);
-      builder.topicCount = user['topiccount'] ?? 0;
-      builder.picture = user['picture'];
-      builder.reputation = user['reputation'];
-      builder.status = user['status'];
-      builder.signature = user['signature'];
-      builder.iconText = user['icon:text'];
-      builder.iconBgColor = user['icon:bgColor'];
-      builder.cover = user['cover:url'];
-      builder.followerCount = utils.convertToInteger(user['followerCount']);
-      builder.followingCount = utils.convertToInteger(user['followingCount']);
-    });
+  User.$();
+
+  factory User.fromMap(Map map) {
+    User user = new _$User(
+      userName: map['username'],
+      uid: utils.convertToInteger(map['uid']),
+      topicCount: map['topiccount'] ?? 0,
+      picture: map['picture'],
+      reputation: map['reputation'],
+      status: map['status'],
+      signature: map['signature'],
+      iconText: map['icon:text'],
+      iconBgColor: map['icon:bgColor'],
+      cover: map['cover:url'],
+      followerCount: utils.convertToInteger(map['followerCount']),
+      followingCount: utils.convertToInteger(map['followingCount'])
+    );
+    return user;
   }
 
-  User._();
-
-  factory User([updates(UserBuilder b)]) = _$User;
+  factory User() = _$User;
 }

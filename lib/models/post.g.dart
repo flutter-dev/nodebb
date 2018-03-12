@@ -3,188 +3,141 @@
 part of post;
 
 // **************************************************************************
-// Generator: BuiltValueGenerator
+// Generator: WillsGenerator
 // **************************************************************************
 
-// ignore_for_file: always_put_control_body_on_new_line
-// ignore_for_file: annotate_overrides
-// ignore_for_file: avoid_annotating_with_dynamic
-// ignore_for_file: avoid_returning_this
-// ignore_for_file: omit_local_variable_types
-// ignore_for_file: prefer_expression_function_bodies
-// ignore_for_file: sort_constructors_first
-
 class _$Post extends Post {
-  @override
-  final int tid;
-  @override
-  final int pid;
-  @override
-  final int uid;
-  @override
-  final bool downVoted;
-  @override
-  final bool upVoted;
-  @override
-  final int upVotes;
-  @override
-  final int downVotes;
-  @override
-  final String content;
-
-  factory _$Post([void updates(PostBuilder b)]) =>
-      (new PostBuilder()..update(updates)).build();
-
-  _$Post._(
-      {this.tid,
-      this.pid,
-      this.uid,
-      this.downVoted,
-      this.upVoted,
-      this.upVotes,
-      this.downVotes,
-      this.content})
-      : super._() {
-    if (tid == null) throw new BuiltValueNullFieldError('Post', 'tid');
-    if (pid == null) throw new BuiltValueNullFieldError('Post', 'pid');
-    if (uid == null) throw new BuiltValueNullFieldError('Post', 'uid');
-    if (downVoted == null)
-      throw new BuiltValueNullFieldError('Post', 'downVoted');
-    if (upVoted == null) throw new BuiltValueNullFieldError('Post', 'upVoted');
-    if (upVotes == null) throw new BuiltValueNullFieldError('Post', 'upVotes');
-    if (downVotes == null)
-      throw new BuiltValueNullFieldError('Post', 'downVotes');
-    if (content == null) throw new BuiltValueNullFieldError('Post', 'content');
-  }
-
-  @override
-  Post rebuild(void updates(PostBuilder b)) =>
-      (toBuilder()..update(updates)).build();
-
-  @override
-  PostBuilder toBuilder() => new PostBuilder()..replace(this);
-
-  @override
-  bool operator ==(dynamic other) {
-    if (identical(other, this)) return true;
-    if (other is! Post) return false;
-    return tid == other.tid &&
-        pid == other.pid &&
-        uid == other.uid &&
-        downVoted == other.downVoted &&
-        upVoted == other.upVoted &&
-        upVotes == other.upVotes &&
-        downVotes == other.downVotes &&
-        content == other.content;
-  }
-
-  @override
-  int get hashCode {
-    return $jf($jc(
-        $jc(
-            $jc(
-                $jc(
-                    $jc(
-                        $jc($jc($jc(0, tid.hashCode), pid.hashCode),
-                            uid.hashCode),
-                        downVoted.hashCode),
-                    upVoted.hashCode),
-                upVotes.hashCode),
-            downVotes.hashCode),
-        content.hashCode));
-  }
-
-  @override
-  String toString() {
-    return (newBuiltValueToStringHelper('Post')
-          ..add('tid', tid)
-          ..add('pid', pid)
-          ..add('uid', uid)
-          ..add('downVoted', downVoted)
-          ..add('upVoted', upVoted)
-          ..add('upVotes', upVotes)
-          ..add('downVotes', downVotes)
-          ..add('content', content))
-        .toString();
-  }
-}
-
-class PostBuilder implements Builder<Post, PostBuilder> {
-  _$Post _$v;
-
   int _tid;
-  int get tid => _$this._tid;
-  set tid(int tid) => _$this._tid = tid;
+  int get tid {
+    $observe('tid');
+    _tid = _tid ?? 0;
+    $checkType(_tid);
+    return _tid;
+  }
+
+  set tid(int tid) {
+    if (tid != null && tid == _tid) return;
+    _tid = tid;
+    $notify('tid');
+  }
 
   int _pid;
-  int get pid => _$this._pid;
-  set pid(int pid) => _$this._pid = pid;
+  int get pid {
+    $observe('pid');
+    _pid = _pid ?? 0;
+    $checkType(_pid);
+    return _pid;
+  }
+
+  set pid(int pid) {
+    if (pid != null && pid == _pid) return;
+    _pid = pid;
+    $notify('pid');
+  }
 
   int _uid;
-  int get uid => _$this._uid;
-  set uid(int uid) => _$this._uid = uid;
+  int get uid {
+    $observe('uid');
+    _uid = _uid ?? 0;
+    $checkType(_uid);
+    return _uid;
+  }
+
+  set uid(int uid) {
+    if (uid != null && uid == _uid) return;
+    _uid = uid;
+    $notify('uid');
+  }
 
   bool _downVoted;
-  bool get downVoted => _$this._downVoted;
-  set downVoted(bool downVoted) => _$this._downVoted = downVoted;
+  bool get downVoted {
+    $observe('downVoted');
+    _downVoted = _downVoted ?? false;
+    $checkType(_downVoted);
+    return _downVoted;
+  }
+
+  set downVoted(bool downVoted) {
+    if (downVoted != null && downVoted == _downVoted) return;
+    _downVoted = downVoted;
+    $notify('downVoted');
+  }
 
   bool _upVoted;
-  bool get upVoted => _$this._upVoted;
-  set upVoted(bool upVoted) => _$this._upVoted = upVoted;
+  bool get upVoted {
+    $observe('upVoted');
+    _upVoted = _upVoted ?? false;
+    $checkType(_upVoted);
+    return _upVoted;
+  }
+
+  set upVoted(bool upVoted) {
+    if (upVoted != null && upVoted == _upVoted) return;
+    _upVoted = upVoted;
+    $notify('upVoted');
+  }
 
   int _upVotes;
-  int get upVotes => _$this._upVotes;
-  set upVotes(int upVotes) => _$this._upVotes = upVotes;
+  int get upVotes {
+    $observe('upVotes');
+    _upVotes = _upVotes ?? 0;
+    $checkType(_upVotes);
+    return _upVotes;
+  }
+
+  set upVotes(int upVotes) {
+    if (upVotes != null && upVotes == _upVotes) return;
+    _upVotes = upVotes;
+    $notify('upVotes');
+  }
 
   int _downVotes;
-  int get downVotes => _$this._downVotes;
-  set downVotes(int downVotes) => _$this._downVotes = downVotes;
+  int get downVotes {
+    $observe('downVotes');
+    _downVotes = _downVotes ?? 0;
+    $checkType(_downVotes);
+    return _downVotes;
+  }
+
+  set downVotes(int downVotes) {
+    if (downVotes != null && downVotes == _downVotes) return;
+    _downVotes = downVotes;
+    $notify('downVotes');
+  }
 
   String _content;
-  String get content => _$this._content;
-  set content(String content) => _$this._content = content;
-
-  PostBuilder();
-
-  PostBuilder get _$this {
-    if (_$v != null) {
-      _tid = _$v.tid;
-      _pid = _$v.pid;
-      _uid = _$v.uid;
-      _downVoted = _$v.downVoted;
-      _upVoted = _$v.upVoted;
-      _upVotes = _$v.upVotes;
-      _downVotes = _$v.downVotes;
-      _content = _$v.content;
-      _$v = null;
-    }
-    return this;
+  String get content {
+    $observe('content');
+    _content = _content ?? '';
+    $checkType(_content);
+    return _content;
   }
 
-  @override
-  void replace(Post other) {
-    if (other == null) throw new ArgumentError.notNull('other');
-    _$v = other as _$Post;
+  set content(String content) {
+    if (content != null && content == _content) return;
+    _content = content;
+    $notify('content');
   }
 
-  @override
-  void update(void updates(PostBuilder b)) {
-    if (updates != null) updates(this);
-  }
-
-  @override
-  _$Post build() {
-    final _$result = _$v ??
-        new _$Post._(
-            tid: tid,
-            pid: pid,
-            uid: uid,
-            downVoted: downVoted,
-            upVoted: upVoted,
-            upVotes: upVotes,
-            downVotes: downVotes,
-            content: content);
-    replace(_$result);
-    return _$result;
+  _$Post.$() : super.$();
+  factory _$Post({
+    int tid: 0,
+    int pid: 0,
+    int uid: 0,
+    bool downVoted: false,
+    bool upVoted: false,
+    int upVotes: 0,
+    int downVotes: 0,
+    String content: '',
+  }) {
+    return new _$Post.$()
+      .._tid = tid
+      .._pid = pid
+      .._uid = uid
+      .._downVoted = downVoted
+      .._upVoted = upVoted
+      .._upVotes = upVotes
+      .._downVotes = downVotes
+      .._content = content;
   }
 }

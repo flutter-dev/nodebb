@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_built_redux/flutter_built_redux.dart';
+import 'package:flutter_wills/flutter_wills.dart';
 import 'package:nodebb/application/application.dart';
 import 'package:nodebb/models/models.dart';
-import 'package:nodebb/actions/actions.dart';
-import 'package:built_collection/built_collection.dart';
+import 'package:nodebb/views/base.dart';
 import 'package:nodebb/utils/utils.dart' as utils;
 
 class TopicsFragment extends StatefulWidget {
@@ -26,31 +25,31 @@ class _TopicsFragmentState extends State<TopicsFragment> {
 
 }
 
-class TopicList extends StoreConnector<AppState, AppActions, BuiltMap<String, Object>> {
+class TopicList extends BaseReactiveWidget {
 
   @override
-  BuiltMap<String, Object> connect(AppState state) {
-    List<Topic> listTopics = state.topics.allIds.map((id) {
-      return state.topics.entities[id];
-    }).toList();
-    BuiltMap<String, Object> localState = new BuiltMap<String, Object>.build((b) {
-      b.putIfAbsent('topics', ()=> new BuiltList<Topic>(listTopics));
-      b.putIfAbsent('userEntities', ()=> state.users.entities);
-    });
-    return localState;
+  BaseReactiveState<ReactiveWidget> createState() {
+    return new _TopicListState();
+  }
+
+}
+
+class _TopicListState extends BaseReactiveState<TopicList> {
+
+  @override
+  void initState() {
+    super.initState();
   }
 
   @override
-  Widget build(BuildContext context, BuiltMap<String, Object> localState, AppActions actions) {
+  Widget render(BuildContext context) {
     var listTiles = <ListTile>[];
-    BuiltList<Topic> topics = localState['topics'] as BuiltList<Topic>;
-    BuiltMap<int, User> userEntities = localState['userEntities'] as BuiltMap<int, User>;
-    topics?.forEach((topic) {
-      User user = userEntities[topic.uid];
+    $store.state.topics.values.forEach((topic) {
+      User user = $store.state.users[topic.uid];
       listTiles.add(new ListTile(
         key: new ValueKey<int>(topic.tid),
         leading: new CircleAvatar(
-          child: !utils.isEmpty(user?.picture) ? null : new Text('${userEntities[topic.uid].iconText}'),
+          child: !utils.isEmpty(user?.picture) ? null : new Text('${user.iconText}'),
           backgroundColor: utils.parseColorFromStr(user?.iconBgColor),
           backgroundImage: utils.isEmpty(user?.picture) ? null : new NetworkImage('http://${Application.host}${user?.picture}'),
         ),

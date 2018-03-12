@@ -1,36 +1,27 @@
 library app_state;
-import 'package:built_value/built_value.dart';
-import 'package:nodebb/models/post.dart';
-import 'package:nodebb/models/user.dart';
-import 'package:nodebb/models/topic.dart';
-import 'package:nodebb/models/category.dart';
-import 'package:nodebb/models/collection.dart';
-import 'package:nodebb/models/request_status.dart';
+import 'package:flutter_wills_gen/wills.dart';
+import 'package:flutter_wills/flutter_wills.dart';
+import 'package:nodebb/models/models.dart';
 
 part 'app_state.g.dart';
 
-abstract class AppState implements Built<AppState, AppStateBuilder> {
+@wills
+abstract class AppState extends Object with Reactive {
 
-  @nullable
-  int get activeUser;
+  User activeUser;
 
-  Collection<int, Topic> get topics;
+  ObservableMap<int, Topic> topics;
 
-  Collection<int, User> get users;
+  ObservableMap<int, Category> categories;
 
-  Collection<int, Category> get categories;
+  ObservableMap<int, User> users;
 
-  Collection<int, Post> get posts;
+  AppState.$();
 
-  RequestStatus get fetchTopicStatus;
-
-  RequestStatus get fetchTopicDetailStatus;
-
-  RequestStatus get fetchUserStatus;
-
-  RequestStatus get doLoginStatus;
-
-  AppState._();
-
-  factory AppState([updates(AppStateBuilder b)]) = _$AppState;
+  factory AppState({
+    User activeUser,
+    ObservableMap<int, Topic> topics,
+    ObservableMap<int, Category> categories,
+    ObservableMap<int, User> users
+  }) = _$AppState;
 }

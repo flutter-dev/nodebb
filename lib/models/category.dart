@@ -1,20 +1,34 @@
 library category;
-import 'package:built_value/built_value.dart';
+import 'package:flutter_wills_gen/wills.dart';
+import 'package:flutter_wills/flutter_wills.dart';
+import 'package:nodebb/utils/utils.dart' as utils;
 
 part 'category.g.dart';
 
-abstract class Category implements Built<Category, CategoryBuilder> {
+@wills
+abstract class Category extends Object with Reactive {
 
-  int get cid;
+  int cid;
 
-  String get name;
+  String name;
 
-  String get bgColor;
+  String bgColor;
 
-  String get color;
+  String color;
 
-  String get image;
+  String image;
 
-  Category._();
-  factory Category([updates(CategoryBuilder b)]) = _$Category;
+  Category.$();
+
+  factory Category.fromMap(Map map) {
+    Category category = new _$Category(
+      cid: utils.convertToInteger(map['cid']),
+      name: map['name'],
+      bgColor: map['bgcolor'],
+      image: map['img']
+    );
+    return category;
+  }
+
+  factory Category() = _$Category;
 }

@@ -1,9 +1,4 @@
-import 'package:built_redux/built_redux.dart';
 import 'package:logging/logging.dart';
-import 'package:nodebb/actions/actions.dart';
-import 'package:nodebb/middleware/middleware.dart';
-import 'package:nodebb/models/models.dart';
-import 'package:nodebb/reducers/reducers.dart';
 
 
 
@@ -16,14 +11,14 @@ class Application {
     });
   }
 
-  static final store = new Store<AppState, AppStateBuilder, AppActions>(
-      reducerBuilder.build(),
-      new AppState(),
-      new AppActions(),
-      middleware: [
-        createAppStoreMiddleware()
-      ]
-  );
+//  static final store = new Store<AppState, AppStateBuilder, AppActions>(
+//      reducerBuilder.build(),
+//      new AppState(),
+//      new AppActions(),
+//      middleware: [
+//        createAppStoreMiddleware()
+//      ]
+//  );
 
   static final Logger logger = new Logger('Application');
 
