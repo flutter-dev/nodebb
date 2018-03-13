@@ -20,9 +20,9 @@ class _TopicDetailState extends BaseReactiveState<TopicDetailPage> {
 
   int tid;
 
-  ObservableState<Post> post = new ObservableState();
+  ReactiveProp<Post> post = new ReactiveProp();
 
-  ObservableState<RequestStatus> status = new ObservableState();
+  ReactiveProp<RequestStatus> status = new ReactiveProp();
 
   @override
   void initState() {
@@ -37,7 +37,9 @@ class _TopicDetailState extends BaseReactiveState<TopicDetailPage> {
       List postsFromData = data['posts'] ?? [];
       post.self = new Post.fromMap(postsFromData[0]);
       status.self = RequestStatus.SUCCESS;
-    }).catchError((err) {
+    }).catchError((err, stacktrace) {
+      print(err);
+      print(stacktrace);
       status.self = RequestStatus.ERROR;
     });
   }
@@ -50,21 +52,23 @@ class _TopicDetailState extends BaseReactiveState<TopicDetailPage> {
         body = new TopicContent(content: post.self?.content ?? '');
         break;
       case RequestStatus.ERROR:
-        body = new Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            new Text('出错了！'),
-            new MaterialButton(
-              color: Colors.blue,
-              textColor: Colors.white,
-              onPressed: () {
-                var state = context.ancestorStateOfType(const TypeMatcher<_TopicDetailState>()) as _TopicDetailState;
-                state.fetchContent();
-              },
-              child: new Text('重试'),
-            )
-          ],
+        body = new Center(
+          child: new Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              new Text('出错了！'),
+              new MaterialButton(
+                color: Colors.blue,
+                textColor: Colors.white,
+                onPressed: () {
+                  var state = context.ancestorStateOfType(const TypeMatcher<_TopicDetailState>()) as _TopicDetailState;
+                  state.fetchContent();
+                },
+                child: new Text('重试'),
+              )
+            ],
+          )
         );
         break;
       default:
