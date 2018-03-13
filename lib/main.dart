@@ -45,6 +45,9 @@ class _AppState extends State<App> {
     ));
 
     store.dispatch(new FetchTopicsAction());
+//    store.dispatch(new LoginAction('波仔', 'haha12345')).then((_) {
+//      print('登录成功');
+//    });
   }
 
 

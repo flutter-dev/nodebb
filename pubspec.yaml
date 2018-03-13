@@ -63,3 +63,6 @@ flutter:
   #
   # For details regarding fonts from package dependencies, 
   # see https://flutter.io/custom-fonts/#from-packages
+  assets:
+    - assets/images/flutter_cover.jpg
+    - assets/images/flutter_avatar.png

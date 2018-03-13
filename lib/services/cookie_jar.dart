@@ -21,7 +21,10 @@ class CookieJar {
 
   add(Cookie cookie) {
 
-    cookie.domain = cookie.domain.startsWith('.') ? cookie.domain.substring(1) : cookie.domain;
+    if(cookie.domain != null) {
+      cookie.domain =
+      cookie.domain.startsWith('.') ? cookie.domain.substring(1) : cookie.domain;
+    }
 
     if(store[cookie.domain] == null) {
       store[cookie.domain] = new List<CookieRecord>();
