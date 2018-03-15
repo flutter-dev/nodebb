@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:nodebb/socket_io/errors.dart';
 import 'package:nodebb/utils/utils.dart' as utils;
 
 enum EngineIOPacketType { OPEN, CLOSE, PING, PONG, MESSAGE, UPGRADE, NOOP }
@@ -25,8 +26,7 @@ EngineIOPacketType getEngineIOPacketType(int t) {
   try {
     type = EngineIOPacketType.values[t];
   } catch (e) {
-    throw new StateError(
-        'unsupport engineio packet type ${t}');
+    throw new SocketIOParseException('unsupport engineio packet type ${t}');
   }
   return type;
 }
@@ -55,7 +55,7 @@ class EngineIOPacketDecoder extends Converter<dynamic, EngineIOPacket> {
           type: type,
           data: _input.skip(1).toList());
     } else {
-      throw new Exception("packet type: ${input.type}, its data type must be List<int> or String, data:${input.data}");
+      throw new SocketIOParseException("packet type: ${input.type}, its data type must be List<int> or String, data:${input.data}");
     }
   }
 
@@ -107,7 +107,7 @@ class EngineIOPacketEncoder extends Converter<EngineIOPacket, dynamic> {
       data.insert(0, packet.type.index);
       return data;
     } else {
-      throw new Exception("packet type: ${packet.type}, its data type must be List<int> or String, data:${packet.data}");
+      throw new SocketIOParseException("packet type: ${packet.type}, its data type must be List<int> or String, data:${packet.data}");
     }
   }
 

@@ -1,9 +1,11 @@
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
+import 'package:nodebb/actions/actions.dart';
 import 'package:nodebb/application/application.dart';
 import 'package:nodebb/models/models.dart';
 import 'package:nodebb/views/base.dart';
+import 'package:nodebb/widgets/builders.dart';
 import 'package:nodebb/widgets/widgets.dart';
 import 'package:nodebb/utils/utils.dart' as utils;
 
@@ -19,7 +21,8 @@ class PersonalFragment extends BaseReactiveWidget {
 class _PersonalFragmentState extends BaseReactiveState<PersonalFragment> {
 
   _buildCover() {
-    if($store.state.activeUser == null) {
+    User user = $store.state.activeUser;
+    if(user == null || user.picture == null || user.picture.length == 0) {
       return new Image.asset('assets/images/flutter_cover.jpg',
         width: ui.window.physicalSize.width / ui.window.devicePixelRatio,
         height: 160.0,
@@ -82,27 +85,25 @@ class _PersonalFragmentState extends BaseReactiveState<PersonalFragment> {
   _buildUserInfo() {
     User user = $store.state.activeUser;
     if(user == null) {
-      return new Center(
-        child: new Container(
-          padding: const EdgeInsets.symmetric(vertical: 12.0),
+      return new Container(
+          padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 24.0),
           child: new MaterialButton(
             height: 44.0,
-            minWidth: 316.0,
-            color: Colors.blue,
+            color: Theme.of(context).primaryColor,
             textColor: Colors.white,
             onPressed: () {
               Navigator.of(context).pushNamed('/login');
             },
             child: new Text('立即登录', style: const TextStyle(fontSize: 18.0),),
           ),
-        )
-      );
+        );
+
     } else {
       return new Container(
           padding: const EdgeInsets.symmetric(horizontal: 24.0),
           child: new Container(
             padding: const EdgeInsets.fromLTRB(0.0, 24.0, 0.0, 12.0),
-            decoration: _buildBottomDivider(),
+            decoration: buildBottomDividerDecoration(context),
             child: new Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
@@ -116,21 +117,13 @@ class _PersonalFragmentState extends BaseReactiveState<PersonalFragment> {
     }
   }
 
-  _buildBottomDivider() {
-    return new BoxDecoration(
-      border: new Border(bottom: new BorderSide(
-          color: utils.parseColorFromStr('#ededed')
-      ))
-    );
-  }
-
   _buildSelectItem({title, icon, divider = true, onTap}) {
     return new InkWell(
       onTap: onTap,
       child: new Container(
           padding: const EdgeInsets.symmetric(horizontal: 24.0),
           child: new Container(
-            decoration: divider ? _buildBottomDivider() : null,
+            decoration: divider ? buildBottomDividerDecoration(context) : null,
             padding: const EdgeInsets.symmetric(vertical: 20.0),
             child: new Row(
               children: <Widget>[
@@ -146,21 +139,41 @@ class _PersonalFragmentState extends BaseReactiveState<PersonalFragment> {
   }
 
   _buildLogoutButton() {
-    return new Center(
-        child: new Container(
-          padding: const EdgeInsets.symmetric(vertical: 12.0),
-          child: new MaterialButton(
-            height: 44.0,
-            minWidth: 316.0,
-            color: Colors.red,
-            textColor: Colors.white,
-            onPressed: () {
-              Navigator.of(context).pushNamed('/login');
-            },
-            child: new Text('登出', style: const TextStyle(fontSize: 18.0),),
-          ),
-        )
-    );
+    if($store.state.activeUser != null) {
+      return new Container(
+        padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 24.0),
+        child: new MaterialButton(
+          height: 44.0,
+          color: Colors.red,
+          textColor: Colors.white,
+          onPressed: () {
+            showDialog(
+              context: context,
+              child: new AlertDialog(
+                content: const Text('确认要登出？'),
+                actions: <Widget>[
+                  new FlatButton(
+                      child: const Text('取消'),
+                      onPressed: () { Navigator.pop(context, false); }
+                  ),
+                  new FlatButton(
+                      child: const Text('确认'),
+                      onPressed: () { Navigator.pop(context, true); }
+                  )
+                ],
+              ),
+            ).then<bool>((value) {
+              if(value != null && value) {
+                $store.dispatch(new LogoutAction());
+              }
+            });
+          },
+          child: new Text('登出', style: const TextStyle(fontSize: 18.0),),
+        ),
+      );
+    } else {
+      return new Container();
+    }
   }
 
   @override

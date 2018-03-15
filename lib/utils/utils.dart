@@ -73,6 +73,7 @@ _throwException(reason) {
 }
 
 Map decodeJSON(String data) {
+  if(data.length == 0) return {};
   var json;
   try {
     json = JSON.decode(data);

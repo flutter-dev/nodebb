@@ -50,7 +50,11 @@ class _LoginPageState extends BaseReactiveState<LoginPage> {
           padding: const EdgeInsets.fromLTRB(24.0, 96.0, 24.0, 0.0),
           children: [
             new TextFormField(
-              decoration: new InputDecoration(labelText: '用户名', contentPadding: const EdgeInsets.symmetric(vertical: 2.0)),
+              style: new TextStyle(fontSize: 18.0, color: Theme.of(context).textTheme.body1.color),
+              decoration: new InputDecoration(
+                labelText: '用户名',
+                contentPadding: new EdgeInsets.only(bottom: 6.0),
+              ),
               validator: (String val) {
                 if(val.length == 0) {
                   return '用户名不能为空';
@@ -65,7 +69,11 @@ class _LoginPageState extends BaseReactiveState<LoginPage> {
             ),
             new TextFormField(
               obscureText: true,
-              decoration: new InputDecoration(labelText: '密码', contentPadding: const EdgeInsets.symmetric(vertical: 2.0)),
+              style: new TextStyle(fontSize: 18.0, color: Theme.of(context).textTheme.body1.color),
+              decoration: new InputDecoration(
+                labelText: '密码',
+                contentPadding: new EdgeInsets.only(bottom: 6.0),
+              ),
               validator: (String val) {
                 if(val.length == 0) {
                   return '密码不能为空';
@@ -82,7 +90,7 @@ class _LoginPageState extends BaseReactiveState<LoginPage> {
               builder: (BuildContext context) {
                 return new MaterialButton(
                   height: 44.0,
-                  color: Colors.blue,
+                  color: Theme.of(context).primaryColor,
                   textColor: Colors.white,
                   onPressed: () {
                     FormState state = Form.of(context);

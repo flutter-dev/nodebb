@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:nodebb/application/application.dart';
+import 'package:nodebb/socket_io/errors.dart';
 import 'package:nodebb/utils/utils.dart' as utils;
 import 'package:nodebb/socket_io/eio_parser.dart';
 
@@ -10,8 +11,7 @@ SocketIOPacketType getSocketIOPacketType(int t) {
   try {
     type = SocketIOPacketType.values[t];
   } catch (e) {
-    throw new StateError(
-        'unsupport socketio packet type ${t}');
+    throw new SocketIOParseException('unsupport socketio packet type ${t}');
   }
   return type;
 }
@@ -63,7 +63,7 @@ class SocketIOPacketDecoder extends Converter<EngineIOPacket, SocketIOPacket> {
         }
         packet.attachments = utils.convertToInteger(_attachments.toString());
         if(packet.attachments == 0 || str[i] != '-') {
-          throw new Exception('illegal attachments');
+          throw new SocketIOParseException('illegal attachments');
         }
       }
       if(i + 1 < str.length) {

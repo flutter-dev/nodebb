@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:nodebb/services/cookie_jar.dart';
 import 'package:nodebb/socket_io/eio_client.dart';
 import 'package:nodebb/socket_io/eio_socket.dart';
 import 'package:nodebb/socket_io/sio_socket.dart';
@@ -18,6 +19,8 @@ class SocketIOClient {
 
   int maxReconnectTry;
 
+  CookieJar jar;
+
   List<SocketIOSocket> sockets = new List();
 
   //StreamController _eventController = new StreamController.broadcast();
@@ -33,15 +36,21 @@ class SocketIOClient {
     this.autoReconnect = true,
     this.reconnectInterval = 10000,
     this.maxReconnectTry = 3,
-    this.connectTimeout = 8000}) {
+    this.connectTimeout = 8000,
+    this.jar
+  }) {
+    if(this.jar == null) {
+      this.jar = new CookieJar();
+    }
     engine = new EngineIOClient(
       autoReconnect: autoReconnect,
       reconnectInterval: reconnectInterval,
-      maxReconnectTry: maxReconnectTry
+      maxReconnectTry: maxReconnectTry,
+      jar: jar
     );
   }
 
-  of({String namespace = '/', Map<String, String> query}) async {
+  Future<SocketIOSocket> of({String namespace = '/', Map<String, String> query}) async {
      EngineIOSocket io = await this.engine.connect(uri);
      SocketIOSocket socket = new SocketIOSocket(
        io: io,

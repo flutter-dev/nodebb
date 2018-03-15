@@ -34,20 +34,20 @@ abstract class User extends Object with Reactive {
 
   User.$();
 
-  factory User.fromMap(Map map) {
+  factory User.fromJson(Map json) {
     User user = new _$User(
-      userName: map['username'],
-      uid: utils.convertToInteger(map['uid']),
-      topicCount: map['topiccount'] ?? 0,
-      picture: map['picture'],
-      reputation: map['reputation'],
-      status: map['status'],
-      signature: map['signature'],
-      iconText: map['icon:text'],
-      iconBgColor: map['icon:bgColor'],
-      cover: map['cover:url'],
-      followerCount: utils.convertToInteger(map['followerCount']),
-      followingCount: utils.convertToInteger(map['followingCount'])
+      userName: json['username'],
+      uid: utils.convertToInteger(json['uid']),
+      topicCount: json['topiccount'] ?? 0,
+      picture: json['picture'],
+      reputation: json['reputation'],
+      status: json['status'],
+      signature: json['signature'],
+      iconText: json['icon:text'],
+      iconBgColor: json['icon:bgColor'],
+      cover: json['cover:url'],
+      followerCount: utils.convertToInteger(json['followerCount']),
+      followingCount: utils.convertToInteger(json['followingCount'])
     );
     return user;
   }

@@ -11,7 +11,6 @@ class _$Post extends Post {
   int get tid {
     $observe('tid');
     _tid = _tid ?? 0;
-    $checkType(_tid);
     return _tid;
   }
 
@@ -25,7 +24,6 @@ class _$Post extends Post {
   int get pid {
     $observe('pid');
     _pid = _pid ?? 0;
-    $checkType(_pid);
     return _pid;
   }
 
@@ -39,7 +37,6 @@ class _$Post extends Post {
   int get uid {
     $observe('uid');
     _uid = _uid ?? 0;
-    $checkType(_uid);
     return _uid;
   }
 
@@ -53,7 +50,6 @@ class _$Post extends Post {
   bool get downVoted {
     $observe('downVoted');
     _downVoted = _downVoted ?? false;
-    $checkType(_downVoted);
     return _downVoted;
   }
 
@@ -67,7 +63,6 @@ class _$Post extends Post {
   bool get upVoted {
     $observe('upVoted');
     _upVoted = _upVoted ?? false;
-    $checkType(_upVoted);
     return _upVoted;
   }
 
@@ -81,7 +76,6 @@ class _$Post extends Post {
   int get upVotes {
     $observe('upVotes');
     _upVotes = _upVotes ?? 0;
-    $checkType(_upVotes);
     return _upVotes;
   }
 
@@ -95,7 +89,6 @@ class _$Post extends Post {
   int get downVotes {
     $observe('downVotes');
     _downVotes = _downVotes ?? 0;
-    $checkType(_downVotes);
     return _downVotes;
   }
 
@@ -109,7 +102,6 @@ class _$Post extends Post {
   String get content {
     $observe('content');
     _content = _content ?? '';
-    $checkType(_content);
     return _content;
   }
 

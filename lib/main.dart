@@ -1,9 +1,13 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_wills/flutter_wills.dart';
 import 'package:nodebb/application/application.dart';
 import 'package:nodebb/models/models.dart';
 import 'package:nodebb/services/remote_service.dart';
+import 'package:nodebb/socket_io/socket_io.dart';
 import 'package:nodebb/utils/utils.dart' as utils;
+import 'package:nodebb/views/chat_page.dart';
 import 'package:nodebb/views/home_page.dart';
 import 'package:nodebb/views/login_page.dart';
 import 'package:nodebb/views/register_page.dart';
@@ -38,16 +42,31 @@ class _AppState extends State<App> {
   void initState() { //initState不要使用async 这样会令initState后于build方法触发
     Application.setup();
     RemoteService.getInstance().setup(Application.host);
+    SocketIOClient client = new SocketIOClient(
+        uri: 'ws://${Application.host}/socket.io/?EIO=3&transport=websocket',
+        jar: RemoteService.getInstance().jar
+    );
+
     store = new Store<AppState>(state: new AppState(
       topics: new ObservableMap.linked(),
       categories: new ObservableMap.linked(),
       users: new ObservableMap.linked()
     ));
+    Future.wait([
+      store.dispatch(new FetchTopicsAction()),
+      store.dispatch(new LoginAction('tain335', 'haha12345'))
+    ]).then((values) {
+      store.dispatch(new FetchTopicsAction()).then((_) {
+        client.of().then((SocketIOSocket socket) {
+          store.state.socket = socket;
 
-    store.dispatch(new FetchTopicsAction());
-//    store.dispatch(new LoginAction('波仔', 'haha12345')).then((_) {
-//      print('登录成功');
-//    });
+        }).catchError((err) {
+          print(err);
+        });
+      });
+    }).catchError((err) {
+      print(err);
+    });
   }
 
 
@@ -75,11 +94,17 @@ class _AppState extends State<App> {
         return new RegisterPage();
       });
     });
+
+    _addRoute('/chat/:uid', (Map<String, String> params) {
+      return new MaterialPageRoute(builder: (BuildContext context) {
+        return new ChatPage();
+      });
+    });
   }
 
   void _addRoute(path, routeBuilder) {
     if(_routes[path] != null) {
-      throw new Exception('Route path ${path} has existed, please check');
+      throw new Exception('Route path: $path has existed, please check');
     }
     _routes[path] = routeBuilder;
   }

@@ -11,7 +11,6 @@ class _$Category extends Category {
   int get cid {
     $observe('cid');
     _cid = _cid ?? 0;
-    $checkType(_cid);
     return _cid;
   }
 
@@ -25,7 +24,6 @@ class _$Category extends Category {
   String get name {
     $observe('name');
     _name = _name ?? '';
-    $checkType(_name);
     return _name;
   }
 
@@ -39,7 +37,6 @@ class _$Category extends Category {
   String get bgColor {
     $observe('bgColor');
     _bgColor = _bgColor ?? '';
-    $checkType(_bgColor);
     return _bgColor;
   }
 
@@ -53,7 +50,6 @@ class _$Category extends Category {
   String get color {
     $observe('color');
     _color = _color ?? '';
-    $checkType(_color);
     return _color;
   }
 
@@ -67,7 +63,6 @@ class _$Category extends Category {
   String get image {
     $observe('image');
     _image = _image ?? '';
-    $checkType(_image);
     return _image;
   }
 

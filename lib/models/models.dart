@@ -5,3 +5,4 @@ export 'category.dart';
 export 'post.dart';
 export 'topic.dart';
 export 'user.dart';
+export 'message.dart';

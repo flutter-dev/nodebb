@@ -21,10 +21,10 @@ class CookieJar {
 
   add(Cookie cookie) {
 
-    if(cookie.domain != null) {
-      cookie.domain =
-      cookie.domain.startsWith('.') ? cookie.domain.substring(1) : cookie.domain;
-    }
+//    if(cookie.domain != null) {
+//      cookie.domain =
+//      cookie.domain.startsWith('.') ? cookie.domain.substring(1) : cookie.domain;
+//    }
 
     if(store[cookie.domain] == null) {
       store[cookie.domain] = new List<CookieRecord>();
@@ -51,8 +51,8 @@ class CookieJar {
       if(domain == uri.host) {
         records.addAll(store[domain]);
       }
-      var d = domain.startsWith('.') ? domain : '.' + domain;
-      if(uri.host.endsWith(d)) {
+      //var d = domain.startsWith('.') ? domain : '.' + domain;
+      if(domain.startsWith('.') && uri.host.endsWith(domain)) {
         records.addAll(store[domain]);
       }
     });
@@ -69,8 +69,8 @@ class CookieJar {
           continue;
         }
       }
-      if((record.cookie.secure && uri.scheme != 'https')
-          || (!record.cookie.secure && uri.scheme != 'http')) {
+      if((record.cookie.secure && (uri.scheme != 'https' && uri.scheme != 'wss'))
+          || (!record.cookie.secure && (uri.scheme != 'http' && uri.scheme != 'ws'))) {
         continue;
       }
       if(!uri.path.startsWith(record.cookie.path)) {
@@ -82,6 +82,7 @@ class CookieJar {
   }
 
   String serializeCookies(List<Cookie> cookies) {
+    if(cookies == null) return null;
     StringBuffer sb = new StringBuffer();
     cookies.forEach((cookie) {
       if(sb.length > 0) {
@@ -90,5 +91,9 @@ class CookieJar {
       sb.write('${cookie.name}=${cookie.value}');
     });
     return sb.toString();
+  }
+
+  void clear() {
+    store.clear();
   }
 }

@@ -11,7 +11,6 @@ class _$AppState extends AppState {
   User get activeUser {
     $observe('activeUser');
 
-    $checkType(_activeUser);
     return _activeUser;
   }
 
@@ -25,7 +24,6 @@ class _$AppState extends AppState {
   ObservableMap<int, Topic> get topics {
     $observe('topics');
 
-    $checkType(_topics);
     return _topics;
   }
 
@@ -39,7 +37,6 @@ class _$AppState extends AppState {
   ObservableMap<int, Category> get categories {
     $observe('categories');
 
-    $checkType(_categories);
     return _categories;
   }
 
@@ -53,7 +50,6 @@ class _$AppState extends AppState {
   ObservableMap<int, User> get users {
     $observe('users');
 
-    $checkType(_users);
     return _users;
   }
 
@@ -63,17 +59,32 @@ class _$AppState extends AppState {
     $notify('users');
   }
 
+  SocketIOSocket _socket;
+  SocketIOSocket get socket {
+    $observe('socket');
+
+    return _socket;
+  }
+
+  set socket(SocketIOSocket socket) {
+    if (socket != null && socket == _socket) return;
+    _socket = socket;
+    $notify('socket');
+  }
+
   _$AppState.$() : super.$();
   factory _$AppState({
     User activeUser,
     ObservableMap<int, Topic> topics,
     ObservableMap<int, Category> categories,
     ObservableMap<int, User> users,
+    SocketIOSocket socket,
   }) {
     return new _$AppState.$()
       .._activeUser = activeUser
       .._topics = topics
       .._categories = categories
-      .._users = users;
+      .._users = users
+      .._socket = socket;
   }
 }

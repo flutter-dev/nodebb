@@ -3,13 +3,17 @@ class _BaseException implements Exception {
 
   const _BaseException(this.reason);
 
-  String toString() => '${runtimeType}.reason: $reason';
+  String toString() => '$runtimeType.reason: $reason';
 }
 
 class NodeBBLoginFailException extends _BaseException {
   const NodeBBLoginFailException([reason]): super(reason);
 }
 
-class RequestFailException extends _BaseException {
-  const RequestFailException([reason]): super(reason);
+//class RequestFailException extends _BaseException {
+//  const RequestFailException([reason]): super(reason);
+//}
+
+class NodeBBServiceNotAvailableException extends _BaseException {
+  const NodeBBServiceNotAvailableException([reason]): super(reason);
 }

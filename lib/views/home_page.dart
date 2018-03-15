@@ -33,18 +33,16 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   BottomNavigationBar _buildBottomNavBar() {
     return new BottomNavigationBar(
-        currentIndex: this._currentIndex,
-        items: <BottomNavigationBarItem>[
-          new BottomNavigationBarItem(icon: const Icon(Icons.explore), title: const Text('话题', style: const TextStyle(fontSize: 12.0))),
-          new BottomNavigationBarItem(icon: const Icon(Icons.message), title: const Text('消息', style: const TextStyle(fontSize: 12.0))),
-          new BottomNavigationBarItem(icon: const Icon(Icons.person), title: const Text('个人', style: const TextStyle(fontSize: 12.0)))
-        ],
-        onTap: (int index) {
-          //this.setState(() {
-          //this._currentIndex = index;
-          this._controller.animateTo(index);
-          //});
-        });
+      currentIndex: this._currentIndex,
+      items: <BottomNavigationBarItem>[
+        new BottomNavigationBarItem(icon: const Icon(Icons.explore), title: const Text('话题', style: const TextStyle(fontSize: 12.0))),
+        new BottomNavigationBarItem(icon: const Icon(Icons.message), title: const Text('消息', style: const TextStyle(fontSize: 12.0))),
+        new BottomNavigationBarItem(icon: const Icon(Icons.person), title: const Text('个人', style: const TextStyle(fontSize: 12.0)))
+      ],
+      onTap: (int index) {
+        this._controller.animateTo(index);
+      }
+    );
   }
 
   @override
