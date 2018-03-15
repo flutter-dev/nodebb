@@ -33,19 +33,19 @@ abstract class Topic extends Object with Reactive {
 
   Topic.$();
 
-  factory Topic.fromMap(Map map) {
+  factory Topic.fromJson(Map json) {
     Topic topic = new  _$Topic(
-      tid: utils.convertToInteger(map['tid']),
-      isOwner: map['isOwner'],
-      cid: utils.convertToInteger(map['cid']),
-      lastPostTime: new DateTime.fromMicrosecondsSinceEpoch(map['lastposttime']),
-      downVotes: map['downvotes'],
-      upVotes: map['upvotes'],
-      timestamp: new DateTime.fromMicrosecondsSinceEpoch(map['timestamp']),
-      postCount: map['postcount'],
-      viewCount: map['viewcount'],
-      title: map['title'],
-      uid: utils.convertToInteger(map['uid'])
+      tid: utils.convertToInteger(json['tid']),
+      isOwner: json['isOwner'],
+      cid: utils.convertToInteger(json['cid']),
+      lastPostTime: new DateTime.fromMicrosecondsSinceEpoch(json['lastposttime']),
+      downVotes: json['downvotes'],
+      upVotes: json['upvotes'],
+      timestamp: new DateTime.fromMicrosecondsSinceEpoch(json['timestamp']),
+      postCount: json['postcount'],
+      viewCount: json['viewcount'],
+      title: json['title'],
+      uid: utils.convertToInteger(json['uid'])
     );
     return topic;
   }

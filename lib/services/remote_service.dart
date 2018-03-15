@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:http/http.dart';
+import 'package:nodebb/errors/errors.dart';
 import 'package:nodebb/services/cookie_jar.dart';
 import 'package:nodebb/utils/utils.dart' as utils;
 
@@ -11,16 +12,14 @@ class RemoteService {
 
   bool _security;
 
-  Client client;
+  final Client client = new Client();
 
-  CookieJar jar;
+  final CookieJar jar = new CookieJar();
 
   static final RemoteService service = new RemoteService._();
 
-  RemoteService._() {
-   client = new Client();
-   jar = new CookieJar();
-  }
+  RemoteService._();
+
   //http://dart.goodev.org/guides/language/effective-dart/design
   //虽然推荐用工厂构造函数
   //但是还是Java的比较直观
@@ -59,7 +58,11 @@ class RemoteService {
   }
 
   Future<Response> post(Uri uri, [Map<String, String> body]) async {
-    return open(uri, method: 'post', body: body);
+    Response res = await open(uri, method: 'post', body: body);
+    if(res.statusCode >= 500) {
+      throw new NodeBBServiceNotAvailableException(res.statusCode);
+    }
+    return res;
   }
 
   Uri _buildUrl(String path, [Map<String, String> params]) {
@@ -84,6 +87,11 @@ class RemoteService {
   Future<Map> doLogin(usernameOrEmail, password) async {
     Response res = await post(_buildUrl('/api/mobile/v1/auth/login'),
         {'username': usernameOrEmail, 'password': password});
+    return utils.decodeJSON(res.body);
+  }
+
+  Future<Map> doLogout() async {
+    Response res = await post(_buildUrl('/api/mobile/v1/auth/logout'), {});
     return utils.decodeJSON(res.body);
   }
 }

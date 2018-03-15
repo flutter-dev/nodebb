@@ -89,7 +89,14 @@ class EngineIOSocket  {
       try {
         Map<String, String> headers = new Map();
         Uri _uri = Uri.parse(uri);
-        headers['Origin'] = ('ws' == _uri.scheme ? 'http://' : 'https://') + '${_uri.host}:${_uri.port}';
+        List<Cookie> cookies =  owner.jar.getCookies(_uri);
+        var cookieStr = owner.jar.serializeCookies(cookies);
+        if(cookieStr != null && cookieStr.length > 0) {
+          headers[HttpHeaders.COOKIE] = cookieStr;
+          Application.logger.fine('send cookie: $cookieStr');
+        }
+        headers['origin'] = ('ws' == _uri.scheme ? 'http://' : 'https://') + '${_uri.host}:${_uri.port}';
+        headers['host'] = '${_uri.host}:${_uri.port}';
         Application.logger.fine('establish engineiosocket connect: $uri');
         socket = await WebSocket.connect(uri, headers: headers);
         _subscription = socket.transform(this.converter).listen(null)
@@ -101,7 +108,7 @@ class EngineIOSocket  {
           });
         Application.logger.fine('establish engineiosocket success: $uri');
       } catch(e) {
-        Application.logger.fine('establish enginesocket fail: $uri, error: $e');
+        Application.logger.warning('establish enginesocket fail: $uri, error: $e');
         readyStatus = EngineIOSocketStatus.CLOSED;
         //_openCompleter.completeError(e);
         _eventController.add(new EngineIOSocketEvent(EngineIOSocketEventType.ERROR, e));

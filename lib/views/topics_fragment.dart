@@ -43,19 +43,6 @@ class _TopicListState extends BaseReactiveState<TopicList> {
 
   @override
   Widget render(BuildContext context) {
-//    var listTiles = <ListTile>[];
-//    $store.state.topics.values.forEach((topic) {
-//      User user = $store.state.users[topic.uid];
-//      listTiles.add(new ListTile(
-//        key: new ValueKey<int>(topic.tid),
-//        leading: new NodeBBAvatar(picture: user?.picture, iconText: user.iconText, iconBgColor: user.iconBgColor),
-//        title: new Text(topic.title),
-//        subtitle: new Text('${topic.viewCount} 浏览 · ${topic.postCount - 1} 回复'),
-//        onTap: () {
-//          Navigator.of(context).pushNamed('/topic/${topic.tid}');
-//        },
-//      ));
-//    });
     return new RefreshIndicator(
         child: new ListView.builder(
           itemCount: $store.state.topics.values.length,

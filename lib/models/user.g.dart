@@ -11,7 +11,6 @@ class _$User extends User {
   int get uid {
     $observe('uid');
     _uid = _uid ?? 0;
-    $checkType(_uid);
     return _uid;
   }
 
@@ -25,7 +24,6 @@ class _$User extends User {
   String get userName {
     $observe('userName');
     _userName = _userName ?? '';
-    $checkType(_userName);
     return _userName;
   }
 
@@ -39,7 +37,6 @@ class _$User extends User {
   String get status {
     $observe('status');
     _status = _status ?? '';
-    $checkType(_status);
     return _status;
   }
 
@@ -53,7 +50,6 @@ class _$User extends User {
   String get picture {
     $observe('picture');
     _picture = _picture ?? '';
-    $checkType(_picture);
     return _picture;
   }
 
@@ -67,7 +63,6 @@ class _$User extends User {
   String get cover {
     $observe('cover');
     _cover = _cover ?? '';
-    $checkType(_cover);
     return _cover;
   }
 
@@ -81,7 +76,6 @@ class _$User extends User {
   int get followerCount {
     $observe('followerCount');
     _followerCount = _followerCount ?? 0;
-    $checkType(_followerCount);
     return _followerCount;
   }
 
@@ -95,7 +89,6 @@ class _$User extends User {
   int get followingCount {
     $observe('followingCount');
     _followingCount = _followingCount ?? 0;
-    $checkType(_followingCount);
     return _followingCount;
   }
 
@@ -109,7 +102,6 @@ class _$User extends User {
   int get reputation {
     $observe('reputation');
     _reputation = _reputation ?? 0;
-    $checkType(_reputation);
     return _reputation;
   }
 
@@ -123,7 +115,6 @@ class _$User extends User {
   int get topicCount {
     $observe('topicCount');
     _topicCount = _topicCount ?? 0;
-    $checkType(_topicCount);
     return _topicCount;
   }
 
@@ -137,7 +128,6 @@ class _$User extends User {
   String get iconBgColor {
     $observe('iconBgColor');
     _iconBgColor = _iconBgColor ?? '';
-    $checkType(_iconBgColor);
     return _iconBgColor;
   }
 
@@ -151,7 +141,6 @@ class _$User extends User {
   String get iconText {
     $observe('iconText');
     _iconText = _iconText ?? '';
-    $checkType(_iconText);
     return _iconText;
   }
 
@@ -165,7 +154,6 @@ class _$User extends User {
   String get signature {
     $observe('signature');
     _signature = _signature ?? '';
-    $checkType(_signature);
     return _signature;
   }
 

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:nodebb/application/application.dart';
+import 'package:nodebb/services/cookie_jar.dart';
 import 'package:nodebb/socket_io/eio_socket.dart';
 
 enum EngineIOEventType { OPEN, CLOSE, ERROR, RECEIVE_PACKET, SEND_PACKET, RECONNECT, RECONNECT_FAIL, RECONNECT_ATTEMPT }
@@ -35,13 +36,20 @@ class EngineIOClient {
 
   int reconnectInterval;
 
+  CookieJar jar;
+
   Map<String, _EngineIOSocketRecord> sockets = new Map();
 
   StreamController<EngineIOEvent> _eventController = new StreamController.broadcast();
 
   Stream<EngineIOEvent> get  eventStream => _eventController.stream;
 
-  EngineIOClient({this.autoReconnect = true, this.maxReconnectTry = 3, this.reconnectInterval = 1000});
+  EngineIOClient({
+    this.autoReconnect = true,
+    this.maxReconnectTry = 3,
+    this.reconnectInterval = 1000,
+    this.jar
+  });
 
   get socketsCount => sockets.values.length;
 

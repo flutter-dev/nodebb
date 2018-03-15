@@ -11,7 +11,6 @@ class _$Topic extends Topic {
   int get cid {
     $observe('cid');
     _cid = _cid ?? 0;
-    $checkType(_cid);
     return _cid;
   }
 
@@ -25,7 +24,6 @@ class _$Topic extends Topic {
   int get tid {
     $observe('tid');
     _tid = _tid ?? 0;
-    $checkType(_tid);
     return _tid;
   }
 
@@ -39,7 +37,6 @@ class _$Topic extends Topic {
   int get uid {
     $observe('uid');
     _uid = _uid ?? 0;
-    $checkType(_uid);
     return _uid;
   }
 
@@ -53,7 +50,6 @@ class _$Topic extends Topic {
   bool get isOwner {
     $observe('isOwner');
     _isOwner = _isOwner ?? false;
-    $checkType(_isOwner);
     return _isOwner;
   }
 
@@ -67,7 +63,6 @@ class _$Topic extends Topic {
   String get title {
     $observe('title');
     _title = _title ?? '';
-    $checkType(_title);
     return _title;
   }
 
@@ -81,7 +76,6 @@ class _$Topic extends Topic {
   DateTime get lastPostTime {
     $observe('lastPostTime');
 
-    $checkType(_lastPostTime);
     return _lastPostTime;
   }
 
@@ -95,7 +89,6 @@ class _$Topic extends Topic {
   int get postCount {
     $observe('postCount');
     _postCount = _postCount ?? 0;
-    $checkType(_postCount);
     return _postCount;
   }
 
@@ -109,7 +102,6 @@ class _$Topic extends Topic {
   DateTime get timestamp {
     $observe('timestamp');
 
-    $checkType(_timestamp);
     return _timestamp;
   }
 
@@ -123,7 +115,6 @@ class _$Topic extends Topic {
   int get viewCount {
     $observe('viewCount');
     _viewCount = _viewCount ?? 0;
-    $checkType(_viewCount);
     return _viewCount;
   }
 
@@ -137,7 +128,6 @@ class _$Topic extends Topic {
   int get upVotes {
     $observe('upVotes');
     _upVotes = _upVotes ?? 0;
-    $checkType(_upVotes);
     return _upVotes;
   }
 
@@ -151,7 +141,6 @@ class _$Topic extends Topic {
   int get downVotes {
     $observe('downVotes');
     _downVotes = _downVotes ?? 0;
-    $checkType(_downVotes);
     return _downVotes;
   }
 
@@ -165,7 +154,6 @@ class _$Topic extends Topic {
   ObservableList<int> get posts {
     $observe('posts');
 
-    $checkType(_posts);
     return _posts;
   }
 

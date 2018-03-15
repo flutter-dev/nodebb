@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:nodebb/application/application.dart';
 import 'package:nodebb/socket_io/eio_parser.dart';
 import 'package:nodebb/socket_io/eio_socket.dart';
+import 'package:nodebb/socket_io/errors.dart';
 import 'package:nodebb/socket_io/sio_client.dart';
 import 'package:nodebb/socket_io/sio_parser.dart';
 import 'package:nodebb/utils/utils.dart' as utils;
@@ -248,7 +249,7 @@ class SocketIOSocket {
         }
       }
     } else {
-      throw new Exception('io does not open before connect');
+      throw new SocketIOStateException('io does not open before connect');
     }
   }
 
@@ -270,5 +271,32 @@ class SocketIOSocket {
     } else {
       teardownEvents();
     }
+  }
+
+  StreamSubscription listen<Data>({SocketIOSocketEventType type = SocketIOSocketEventType.RECEIVE,onData, onError, onDone}) {
+    StreamSubscription ss;
+    ss = eventStream
+      .where((SocketIOSocketEvent event)=> event.type == type)
+      .map((SocketIOSocketEvent event) {
+        if(event.data is Data) {
+          return event as Data;
+        } else {
+          throw event.data;
+        }
+      }).listen(null)
+      ..onData((Data data) {
+        if(onData != null) {
+          onData(data);
+        }
+      })..onError((err) {
+        if(onError != null) {
+          onError(err);
+        }
+      })..onDone(() {
+        if(onDone != null) {
+          onDone();
+        }
+      });
+    return ss;
   }
 }

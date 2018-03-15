@@ -2,6 +2,7 @@ library app_state;
 import 'package:flutter_wills_gen/wills.dart';
 import 'package:flutter_wills/flutter_wills.dart';
 import 'package:nodebb/models/models.dart';
+import 'package:nodebb/socket_io/socket_io.dart';
 
 part 'app_state.g.dart';
 
@@ -15,6 +16,8 @@ abstract class AppState extends Object with Reactive {
   ObservableMap<int, Category> categories;
 
   ObservableMap<int, User> users;
+
+  SocketIOSocket socket;
 
   AppState.$();
 
