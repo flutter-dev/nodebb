@@ -40,14 +40,14 @@ abstract class User extends Object with Reactive {
       uid: utils.convertToInteger(json['uid']),
       topicCount: json['topiccount'] ?? 0,
       picture: json['picture'],
-      reputation: json['reputation'],
+      reputation: json['reputation'] ?? 0,
       status: json['status'],
-      signature: json['signature'],
+      signature: json['signature'] ?? '',
       iconText: json['icon:text'],
       iconBgColor: json['icon:bgColor'],
-      cover: json['cover:url'],
-      followerCount: utils.convertToInteger(json['followerCount']),
-      followingCount: utils.convertToInteger(json['followingCount'])
+      cover: json['cover:url'] ?? '',
+      followerCount: utils.convertToInteger(json['followerCount'] ?? 0),
+      followingCount: utils.convertToInteger(json['followingCount'] ?? 0)
     );
     return user;
   }

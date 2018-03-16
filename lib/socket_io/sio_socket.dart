@@ -182,7 +182,9 @@ class SocketIOSocket {
   onAck(SocketIOPacket packet) {
     if(packet.id != null && acks[packet.id] != null) {
       Application.logger.fine('call ack ${packet.id} with ${packet.data}');
+      //todo remove handler
       acks[packet.id](packet);
+      acks.remove(packet.id);
     } else {
       Application.logger.fine('bad ack ${packet.id}');
     }

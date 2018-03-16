@@ -1,5 +1,6 @@
 import 'package:flutter_wills/flutter_wills.dart';
 import 'package:nodebb/models/models.dart';
+import 'package:nodebb/models/room.dart';
 
 abstract class BaseMutation extends WillsMutation<Store<AppState>> {}
 
@@ -45,3 +46,39 @@ class SetActiveUserMutation extends BaseMutation {
   }
 
 }
+
+class AddRoomsMutation extends BaseMutation {
+
+  List<Room> rooms;
+
+  AddRoomsMutation(this.rooms);
+
+  @override
+  exec() {
+    rooms.forEach((room) {
+      $store.state.rooms[room.roomId] = room;
+    });
+  }
+
+}
+
+class SetUnreadInfoMutation extends BaseMutation {
+
+  UnreadInfo info;
+
+  SetUnreadInfoMutation(this.info);
+
+  @override
+  exec() {
+    $store.state.unreadInfo = info;
+  }
+
+}
+
+//class AddMessagesToRoomMutation extends BaseMutation {
+//
+//  Message message
+//
+//  AddMessageToRoomMutation();
+//
+//}

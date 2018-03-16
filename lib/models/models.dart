@@ -6,3 +6,6 @@ export 'post.dart';
 export 'topic.dart';
 export 'user.dart';
 export 'message.dart';
+export 'unread_info.dart';
+export 'room.dart';
+export 'teaser.dart';
