@@ -49,7 +49,7 @@ class _TopicListState extends BaseReactiveState<TopicList> {
           itemBuilder: (BuildContext context, int index) {
             if(index >= $store.state.topics.values.length) return null;
             Topic topic = $store.state.topics.values.toList()[index];
-            User user = $store.state.users[topic.uid];
+            User user = topic.user;
             return new ListTile(
               key: new ValueKey<int>(topic.tid),
               leading: new NodeBBAvatar(picture: user?.picture, iconText: user.iconText, iconBgColor: user.iconBgColor),

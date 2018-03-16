@@ -20,17 +20,17 @@ class _$Message extends Message {
     $notify('user');
   }
 
-  DateTime _createdTime;
-  DateTime get createdTime {
-    $observe('createdTime');
+  DateTime _timestamp;
+  DateTime get timestamp {
+    $observe('timestamp');
 
-    return _createdTime;
+    return _timestamp;
   }
 
-  set createdTime(DateTime createdTime) {
-    if (createdTime != null && createdTime == _createdTime) return;
-    _createdTime = createdTime;
-    $notify('createdTime');
+  set timestamp(DateTime timestamp) {
+    if (timestamp != null && timestamp == _timestamp) return;
+    _timestamp = timestamp;
+    $notify('timestamp');
   }
 
   String _content;
@@ -62,13 +62,13 @@ class _$Message extends Message {
   _$Message.$() : super.$();
   factory _$Message({
     User user,
-    DateTime createdTime,
+    DateTime timestamp,
     String content: '',
     MessageType type,
   }) {
     return new _$Message.$()
       .._user = user
-      .._createdTime = createdTime
+      .._timestamp = timestamp
       .._content = content
       .._type = type;
   }

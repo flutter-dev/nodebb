@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_wills/flutter_wills.dart';
 import 'package:nodebb/models/models.dart';
+import 'package:nodebb/services/io_service.dart';
 import 'package:nodebb/views/base.dart';
 import 'package:nodebb/widgets/widgets.dart';
 
@@ -24,9 +25,18 @@ class _RegisterPageState extends BaseReactiveState<ChatPage> {
         content: message,
         type: MessageType.SEND,
         user: $store.state.activeUser,
-        createdTime: new DateTime.now()
+        timestamp: new DateTime.now()
       )
     );
+  }
+
+
+  @override
+  void initState() {
+    Room room = $store.state.rooms[widget.routeParams['roomId']];
+    IOService.getInstance().loadRoom(roomId: room.roomId, uid: $store.state.activeUser.uid).then((List<Message> messages) {
+
+    });
   }
 
   @override

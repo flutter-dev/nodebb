@@ -33,17 +33,17 @@ class _$Topic extends Topic {
     $notify('tid');
   }
 
-  int _uid;
-  int get uid {
-    $observe('uid');
-    _uid = _uid ?? 0;
-    return _uid;
+  User _user;
+  User get user {
+    $observe('user');
+
+    return _user;
   }
 
-  set uid(int uid) {
-    if (uid != null && uid == _uid) return;
-    _uid = uid;
-    $notify('uid');
+  set user(User user) {
+    if (user != null && user == _user) return;
+    _user = user;
+    $notify('user');
   }
 
   bool _isOwner;
@@ -150,24 +150,11 @@ class _$Topic extends Topic {
     $notify('downVotes');
   }
 
-  ObservableList<int> _posts;
-  ObservableList<int> get posts {
-    $observe('posts');
-
-    return _posts;
-  }
-
-  set posts(ObservableList<int> posts) {
-    if (posts != null && posts == _posts) return;
-    _posts = posts;
-    $notify('posts');
-  }
-
   _$Topic.$() : super.$();
   factory _$Topic({
     int cid: 0,
     int tid: 0,
-    int uid: 0,
+    User user,
     bool isOwner: false,
     String title: '',
     DateTime lastPostTime,
@@ -176,12 +163,11 @@ class _$Topic extends Topic {
     int viewCount: 0,
     int upVotes: 0,
     int downVotes: 0,
-    ObservableList<int> posts,
   }) {
     return new _$Topic.$()
       .._cid = cid
       .._tid = tid
-      .._uid = uid
+      .._user = user
       .._isOwner = isOwner
       .._title = title
       .._lastPostTime = lastPostTime
@@ -189,7 +175,6 @@ class _$Topic extends Topic {
       .._timestamp = timestamp
       .._viewCount = viewCount
       .._upVotes = upVotes
-      .._downVotes = downVotes
-      .._posts = posts;
+      .._downVotes = downVotes;
   }
 }

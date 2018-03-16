@@ -20,6 +20,19 @@ class _$AppState extends AppState {
     $notify('activeUser');
   }
 
+  UnreadInfo _unreadInfo;
+  UnreadInfo get unreadInfo {
+    $observe('unreadInfo');
+
+    return _unreadInfo;
+  }
+
+  set unreadInfo(UnreadInfo unreadInfo) {
+    if (unreadInfo != null && unreadInfo == _unreadInfo) return;
+    _unreadInfo = unreadInfo;
+    $notify('unreadInfo');
+  }
+
   ObservableMap<int, Topic> _topics;
   ObservableMap<int, Topic> get topics {
     $observe('topics');
@@ -59,32 +72,34 @@ class _$AppState extends AppState {
     $notify('users');
   }
 
-  SocketIOSocket _socket;
-  SocketIOSocket get socket {
-    $observe('socket');
+  ObservableMap<int, Room> _rooms;
+  ObservableMap<int, Room> get rooms {
+    $observe('rooms');
 
-    return _socket;
+    return _rooms;
   }
 
-  set socket(SocketIOSocket socket) {
-    if (socket != null && socket == _socket) return;
-    _socket = socket;
-    $notify('socket');
+  set rooms(ObservableMap<int, Room> rooms) {
+    if (rooms != null && rooms == _rooms) return;
+    _rooms = rooms;
+    $notify('rooms');
   }
 
   _$AppState.$() : super.$();
   factory _$AppState({
     User activeUser,
+    UnreadInfo unreadInfo,
     ObservableMap<int, Topic> topics,
     ObservableMap<int, Category> categories,
     ObservableMap<int, User> users,
-    SocketIOSocket socket,
+    ObservableMap<int, Room> rooms,
   }) {
     return new _$AppState.$()
       .._activeUser = activeUser
+      .._unreadInfo = unreadInfo
       .._topics = topics
       .._categories = categories
       .._users = users
-      .._socket = socket;
+      .._rooms = rooms;
   }
 }

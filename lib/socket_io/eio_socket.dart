@@ -133,7 +133,7 @@ class EngineIOSocket  {
   }
 
   ping() {
-    Application.logger.fine('socket $sid ping');
+    Application.logger.fine('socket: $sid ping');
     this.sendPacket(new EngineIOPacket(type: EngineIOPacketType.PING));
   }
 
@@ -153,17 +153,16 @@ class EngineIOSocket  {
 
   flush() {
     if(readyStatus == EngineIOSocketStatus.OPEN) {
-      new Stream.fromIterable(writeBuffer)
+      new Stream.fromIterable(writeBuffer.toList())
           .transform(new EngineIOPacketEncoder()).listen(null)
         ..onData((data) {
           Application.logger.fine('socket: $sid send: $data');
           socket.add(data);
           _eventController.add(new EngineIOSocketEvent(EngineIOSocketEventType.SEND, data));
         })..onDone(() {
-        writeBuffer.clear();
         _eventController.add(new EngineIOSocketEvent(EngineIOSocketEventType.FLUSH));
       });
-
+      writeBuffer.clear();
     }
   }
 

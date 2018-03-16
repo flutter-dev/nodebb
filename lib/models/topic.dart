@@ -1,6 +1,8 @@
 library topic;
 import 'package:flutter_wills_gen/wills.dart';
 import 'package:flutter_wills/flutter_wills.dart';
+import 'package:nodebb/models/post.dart';
+import 'package:nodebb/models/user.dart';
 import 'package:nodebb/utils/utils.dart' as utils;
 part 'topic.g.dart';
 
@@ -11,7 +13,7 @@ abstract class Topic extends Object with Reactive {
 
   int tid; //Topic ID
 
-  int uid; //用户 ID
+  User user;
 
   bool isOwner;
 
@@ -29,7 +31,7 @@ abstract class Topic extends Object with Reactive {
 
   int downVotes; //踩
 
-  ObservableList<int> posts; //posts
+//  ObservableList<Post> posts; //posts
 
   Topic.$();
 
@@ -45,7 +47,8 @@ abstract class Topic extends Object with Reactive {
       postCount: json['postcount'],
       viewCount: json['viewcount'],
       title: json['title'],
-      uid: utils.convertToInteger(json['uid'])
+      //uid: utils.convertToInteger(json['uid'])
+      user: new User.fromJson(json['user'])
     );
     return topic;
   }

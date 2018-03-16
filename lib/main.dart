@@ -2,17 +2,17 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_wills/flutter_wills.dart';
+import 'package:nodebb/actions/actions.dart';
 import 'package:nodebb/application/application.dart';
 import 'package:nodebb/models/models.dart';
-import 'package:nodebb/services/remote_service.dart';
-import 'package:nodebb/socket_io/socket_io.dart';
+import 'package:nodebb/mutations/mutations.dart';
+import 'package:nodebb/services/io_service.dart';
 import 'package:nodebb/utils/utils.dart' as utils;
 import 'package:nodebb/views/chat_page.dart';
 import 'package:nodebb/views/home_page.dart';
 import 'package:nodebb/views/login_page.dart';
 import 'package:nodebb/views/register_page.dart';
 import 'package:nodebb/views/topic_detail_page.dart';
-import 'package:nodebb/actions/actions.dart';
 
 const APP_TITLE = 'Flutter Dev';
 
@@ -40,30 +40,28 @@ class _AppState extends State<App> {
 
   @override
   void initState() { //initState不要使用async 这样会令initState后于build方法触发
+
     Application.setup();
-    RemoteService.getInstance().setup(Application.host);
-    SocketIOClient client = new SocketIOClient(
-        uri: 'ws://${Application.host}/socket.io/?EIO=3&transport=websocket',
-        jar: RemoteService.getInstance().jar
-    );
 
     store = new Store<AppState>(state: new AppState(
+      unreadInfo: new UnreadInfo(),
       topics: new ObservableMap.linked(),
       categories: new ObservableMap.linked(),
-      users: new ObservableMap.linked()
+      users: new ObservableMap.linked(),
+      rooms: new ObservableMap.linked()
     ));
+
     Future.wait([
       store.dispatch(new FetchTopicsAction()),
       store.dispatch(new LoginAction('tain335', 'haha12345'))
-    ]).then((values) {
-      store.dispatch(new FetchTopicsAction()).then((_) {
-        client.of().then((SocketIOSocket socket) {
-          store.state.socket = socket;
+    ]).then((values) async {
+      await IOService.getInstance().connect();
+      store.dispatch(new FetchUnreadInfoAction());
+      store.dispatch(new FetchRecentChatAction());
+      //store.dispatch(new FetchTopicsAction()).then((_) async {
 
-        }).catchError((err) {
-          print(err);
-        });
-      });
+
+      //});
     }).catchError((err) {
       print(err);
     });
@@ -95,7 +93,7 @@ class _AppState extends State<App> {
       });
     });
 
-    _addRoute('/chat/:uid', (Map<String, String> params) {
+    _addRoute('/chat/:roomId', (Map<String, String> params) {
       return new MaterialPageRoute(builder: (BuildContext context) {
         return new ChatPage();
       });

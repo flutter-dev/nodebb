@@ -88,7 +88,7 @@ class SocketIOPacketDecoder extends Converter<EngineIOPacket, SocketIOPacket> {
               i--;
               break;
             }
-            sb.write(next.toString());
+            sb.write(str[i]);
           }
           packet.id = utils.convertToInteger(sb.toString());
         }
