@@ -13,3 +13,7 @@ class SocketIOStateException extends _BaseException {
 class SocketIOParseException extends _BaseException {
   const SocketIOParseException([reason]): super(reason);
 }
+
+class EngineIOReconnectFailException extends _BaseException {
+  const EngineIOReconnectFailException([reason]): super(reason);
+}

@@ -52,7 +52,11 @@ class _TopicListState extends BaseReactiveState<TopicList> {
             User user = topic.user;
             return new ListTile(
               key: new ValueKey<int>(topic.tid),
-              leading: new NodeBBAvatar(picture: user?.picture, iconText: user.iconText, iconBgColor: user.iconBgColor),
+              leading: new SizedBox(
+                width: 40.0,
+                height: 40.0,
+                child: new NodeBBAvatar(picture: user?.picture, iconText: user.iconText, iconBgColor: user.iconBgColor)
+              ),
               title: new Text(topic.title),
               subtitle: new Text('${topic.viewCount} 浏览 · ${topic.postCount - 1} 回复'),
               onTap: () {

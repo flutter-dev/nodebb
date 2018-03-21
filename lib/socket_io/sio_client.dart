@@ -17,7 +17,7 @@ class SocketIOClient {
 
   int reconnectInterval;
 
-  int maxReconnectTry;
+  int maxReconnectTrys;
 
   CookieJar jar;
 
@@ -35,7 +35,7 @@ class SocketIOClient {
     this.uri,
     this.autoReconnect = true,
     this.reconnectInterval = 10000,
-    this.maxReconnectTry = 3,
+    this.maxReconnectTrys = 3,
     this.connectTimeout = 8000,
     this.jar
   }) {
@@ -45,13 +45,13 @@ class SocketIOClient {
     engine = new EngineIOClient(
       autoReconnect: autoReconnect,
       reconnectInterval: reconnectInterval,
-      maxReconnectTry: maxReconnectTry,
+      maxReconnectTrys: maxReconnectTrys,
       jar: jar
     );
   }
 
   Future<SocketIOSocket> of({String namespace = '/', Map<String, String> query}) async {
-     EngineIOSocket io = await this.engine.connect(uri);
+     EngineIOSocket io = await engine.connect(uri, true);
      SocketIOSocket socket = new SocketIOSocket(
        io: io,
        namespace: namespace,

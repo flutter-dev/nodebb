@@ -45,7 +45,9 @@ class _MessagesFragmentState extends BaseReactiveState<MessagesFragment> {
     );
   }
 
-  Widget _buildRoomItem({User user, String content, onTap}) {
+  Widget _buildRoomItem({Room room, onTap}) {
+    User user = room.users[0];
+    String content = room.teaser.content;
     return new InkWell(
       onTap: onTap,
       child: new SizedBox(
@@ -55,12 +57,17 @@ class _MessagesFragmentState extends BaseReactiveState<MessagesFragment> {
           child: new Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              new NodeBBAvatar(
-                picture: user.picture,
-                iconText: user.iconText,
-                iconBgColor: user.iconBgColor
+              new SizedBox(
+                width: 42.0,
+                height: 42.0,
+                child: new NodeBBAvatar(
+                  picture: user.picture,
+                  iconText: user.iconText,
+                  iconBgColor: user.iconBgColor,
+                  marked: room.unread,
+                )
               ),
-              new Padding(padding: const EdgeInsets.only(right: 8.0)),
+              new Padding(padding: const EdgeInsets.only(right: 4.0)),
               new Expanded(
                 child: new Container(
                   decoration: buildBottomDividerDecoration(context),
@@ -71,7 +78,7 @@ class _MessagesFragmentState extends BaseReactiveState<MessagesFragment> {
                     children: <Widget>[
                       new Text(user.userName, style: const TextStyle(fontSize: 16.0),),
                       new Padding(padding: const EdgeInsets.only(top: 4.0)),
-                      new Text(content, style: const TextStyle(fontSize: 14.0, color: Colors.grey))
+                      new Text(content, maxLines: 1, overflow:TextOverflow.ellipsis, style: const TextStyle(fontSize: 14.0, color: Colors.grey))
                     ],
                   )
                 )
@@ -88,6 +95,11 @@ class _MessagesFragmentState extends BaseReactiveState<MessagesFragment> {
     List<Widget> contents = new List();
     contents.addAll([
       _buildSystemItem(
+        icon: Icons.search,
+        title: '查找用户',
+        iconColor: Theme.of(context).primaryColor
+      ),
+      _buildSystemItem(
         icon: Icons.rss_feed,
         title: '系统通知',
         iconColor: Theme.of(context).primaryColor
@@ -102,9 +114,9 @@ class _MessagesFragmentState extends BaseReactiveState<MessagesFragment> {
       )
     ]);
     $store.state.rooms.values.forEach((Room room) {
-      contents.add(_buildRoomItem(user: room.users[0], content: room.teaser.content, onTap: () {
+      contents.add(_buildRoomItem(room: room, onTap: () {
         for(User user in room.users) {
-          if(user.uid != $store.state.activeUser.uid) {
+          if(user.uid != $store.state.activeUser?.uid) {
             $store.commit(new AddUsersMutation([user]));
           }
         }

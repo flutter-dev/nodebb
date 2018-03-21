@@ -6,10 +6,12 @@ import 'package:nodebb/models/user.dart';
 
 part 'message.g.dart';
 
-enum MessageType { SEND, RECEIVE }
+enum MessageType { SEND, RECEIVE, SEND_PENDING }
 
 @wills
 class Message extends Object with Reactive {
+
+  int id;
 
   User user;
 
@@ -21,8 +23,11 @@ class Message extends Object with Reactive {
 
   Message.$();
   
+  factory Message({User user, DateTime timestamp, String content, MessageType type}) = _$Message;
+
   factory Message.fromJson(Map json) {
     Message msg = new _$Message(
+      id: json['messageId'],
       user: new User.fromJson(json['fromUser']),
       timestamp: new DateTime.fromMicrosecondsSinceEpoch(json['timestamp']),
       content: json['cleanedContent'],
@@ -30,7 +35,5 @@ class Message extends Object with Reactive {
     );
     return msg;
   }
-
-  factory Message({User user, DateTime timestamp, String content, MessageType type}) = _$Message;
 
 }

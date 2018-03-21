@@ -1,12 +1,16 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_wills/flutter_wills.dart';
+import 'package:flutter/services.dart';
 import 'package:nodebb/models/models.dart';
+import 'package:nodebb/mutations/mutations.dart';
 import 'package:nodebb/services/io_service.dart';
 import 'package:nodebb/views/base.dart';
 import 'package:nodebb/widgets/widgets.dart';
+import 'package:nodebb/utils/utils.dart' as utils;
 
 class ChatPage extends BaseReactivePage {
-  ChatPage({Key key}) : super(key: key);
+  ChatPage({Key key, routeParams}) : super(key: key, routeParams: routeParams);
 
   @override
   BaseReactiveState<ChatPage> createState() => new _RegisterPageState();
@@ -14,35 +18,72 @@ class ChatPage extends BaseReactivePage {
 
 class _RegisterPageState extends BaseReactiveState<ChatPage> {
 
-  ObservableList<Message> messages = new ObservableList<Message>();
+  Room room;
+
+  StreamSubscription chatSub;
 
   TextEditingController _textController =  new TextEditingController();
 
-  _handleSubmit(String message) {
-    if(message == null || message.length == 0) return;
+  _handleSubmit(String content) {
+    if(content == null || content.length == 0) return;
     _textController.clear();
-    messages.insert(0, new Message(
-        content: message,
-        type: MessageType.SEND,
-        user: $store.state.activeUser,
-        timestamp: new DateTime.now()
-      )
+    Message msg = new Message(
+      content: content,
+      type: MessageType.SEND_PENDING,
+      user: $store.state.activeUser,
+      timestamp: new DateTime.now()
     );
+    IOService.getInstance().sendMessage(roomId: room.roomId, content: content).then((Message message) {
+      msg.id = message.id;
+      msg.type = MessageType.SEND;
+    });
+    room.messages.insert(0, msg);
+    //FocusScope.of(context).requestFocus(new FocusNode()); //收起键盘
+    //SystemChannels.textInput.invokeMethod('TextInput.hide');
   }
 
 
   @override
   void initState() {
-    Room room = $store.state.rooms[widget.routeParams['roomId']];
-    IOService.getInstance().loadRoom(roomId: room.roomId, uid: $store.state.activeUser.uid).then((List<Message> messages) {
+    super.initState();
+  }
 
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    room = $store.state.rooms[int.parse(widget.routeParams['roomId'])];
+    IOService.getInstance().loadRoom(roomId: room.roomId, uid: $store.state.activeUser.uid).then((List<Message> messages) {
+      messages = messages.map((Message msg) {
+        if(msg.user.uid == $store.state.activeUser.uid) {
+          msg.type = MessageType.SEND;
+        }
+        return msg;
+      }).toList().reversed.toList();
+      $store.commit(new ClearMessagesFromRoomMutation(room.roomId));
+      $store.commit(new AddMessagesToRoomMutation(room.roomId, messages));
+      IOService.getInstance().markRead(room.roomId);
+    });
+    chatSub?.cancel();
+    chatSub = IOService.getInstance().eventStream.listen(null)..onData((NodeBBEvent event) {
+      if(event.type == NodeBBEventType.RECEIVE_CHATS) {
+        Map data = event.data;
+        if(utils.convertToInteger(data['roomId']) == room.roomId
+         && data['fromUid'] != $store.state.activeUser.uid) {
+          room.messages.insert(0, new Message.fromJson(data['message']));
+          event.ack();
+        }
+        if(utils.convertToInteger(data['roomId']) == room.roomId) {
+          IOService.getInstance().markRead(room.roomId);
+        }
+      }
     });
   }
 
   @override
   Widget render(BuildContext context) {
     return new Scaffold(
-      appBar: new AppBar(title: new Text('聊天')),
+      appBar: new AppBar(title: new Text(utils.isEmpty(room.roomName) ? room.ownerName : room.roomName)),
       body: new Column(
         children: <Widget>[
           new Expanded(
@@ -50,11 +91,11 @@ class _RegisterPageState extends BaseReactiveState<ChatPage> {
               reverse: true,
               itemBuilder: (BuildContext context, int index) {
                 $enterScope();
-                if(index >= messages.length) {
+                if(index >= room.messages.length) {
                   $leaveScope();
                   return null;
                 } else {
-                  Widget w = new MessageWidget(messages[index]);
+                  Widget w = new MessageWidget(room.messages[index]);
                   $leaveScope();
                   return w;
                 }
@@ -103,4 +144,16 @@ class _RegisterPageState extends BaseReactiveState<ChatPage> {
       )
     );
   }
+
+
+
+  @override
+  void dispose() {
+    super.dispose();
+    chatSub?.cancel();
+    SystemChannels.textInput.invokeMethod('TextInput.hide');
+    //FocusScope.of(context).requestFocus(new FocusNode());
+  }
+
+
 }
