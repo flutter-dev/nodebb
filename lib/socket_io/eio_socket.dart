@@ -1,14 +1,16 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:nodebb/application/application.dart';
 import 'package:nodebb/socket_io/eio_client.dart';
 import 'package:nodebb/socket_io/eio_parser.dart';
+import 'package:nodebb/socket_io/errors.dart';
 import 'package:nodebb/utils/utils.dart' as utils;
 
-enum EngineIOSocketStatus { INITIAL, OPENING, OPEN, CLOSING, CLOSED }
+enum EngineIOSocketStatus { INITIAL, OPENING, OPEN, RECONNECT, CLOSING, CLOSED }
 
-enum EngineIOSocketEventType { OPEN, CLOSE, SEND, RECEIVE, FLUSH, ERROR }
+enum EngineIOSocketEventType { OPEN, CLOSE, RECONNECT_ATTEMPT, RECONNECT_SUCCESS, RECONNECT_FAIL, SEND, RECEIVE, FLUSH, ERROR }
 
 class EngineIOSocketEvent {
 
@@ -29,6 +31,14 @@ class EngineIOSocket  {
   EngineIOClient owner;
 
   String sid; //会话id
+
+  bool autoReconnect;
+
+  int maxReconnectTrys;
+
+  int reconnectInterval;
+
+  int reconnectTrys = 0;
 
   Duration pingInterval;
 
@@ -66,15 +76,17 @@ class EngineIOSocket  {
 
   set readyStatus(EngineIOSocketStatus status) {
     _readyStatus = status;
-    if(_readyStatus == EngineIOSocketStatus.OPEN) {
-//      if(_openCompleter != null) {
-//        _openCompleter.complete();
-//      }
-      _eventController.add(new EngineIOSocketEvent(EngineIOSocketEventType.OPEN));
-    }
   }
 
-  EngineIOSocket({this.uri, this.converter, this.sid, this.owner}) {
+  EngineIOSocket({
+    this.uri,
+    this.converter,
+    this.sid,
+    this.owner,
+    this.autoReconnect = true,
+    this.maxReconnectTrys = 3,
+    this.reconnectInterval = 1000,
+  }) {
     if(converter == null) {
       converter = new EngineIOPacketDecoder();
     }
@@ -85,55 +97,84 @@ class EngineIOSocket  {
     if(readyStatus == EngineIOSocketStatus.INITIAL
         || readyStatus == EngineIOSocketStatus.CLOSED) {
       readyStatus = EngineIOSocketStatus.OPENING;
-      //_openCompleter = new Completer();
       try {
-        Map<String, String> headers = new Map();
-        Uri _uri = Uri.parse(uri);
-        List<Cookie> cookies =  owner.jar.getCookies(_uri);
-        var cookieStr = owner.jar.serializeCookies(cookies);
-        if(cookieStr != null && cookieStr.length > 0) {
-          headers[HttpHeaders.COOKIE] = cookieStr;
-          Application.logger.fine('send cookie: $cookieStr');
-        }
-        headers['origin'] = ('ws' == _uri.scheme ? 'http://' : 'https://') + '${_uri.host}:${_uri.port}';
-        headers['host'] = '${_uri.host}:${_uri.port}';
-        Application.logger.fine('establish engineiosocket connect: $uri');
-        socket = await WebSocket.connect(uri, headers: headers);
-        _subscription = socket.transform(this.converter).listen(null)
-          ..onData((data) {
-            onPacket(data);
-          })
-          ..onError((e) {
-            onError(e);
-          });
-        Application.logger.fine('establish engineiosocket success: $uri');
+       await reconnect();
       } catch(e) {
-        Application.logger.warning('establish enginesocket fail: $uri, error: $e');
+        Application.logger.warning('enginesocket establish fail: $uri, error: $e');
         readyStatus = EngineIOSocketStatus.CLOSED;
-        //_openCompleter.completeError(e);
         _eventController.add(new EngineIOSocketEvent(EngineIOSocketEventType.ERROR, e));
       }
-      //return await _openCompleter.future;
     }
+  }
+
+  reconnect() async {
+    Map<String, String> headers = new Map();
+    Uri _uri = Uri.parse(uri);
+    List<Cookie> cookies =  owner.jar.getCookies(_uri);
+    var cookieStr = owner.jar.serializeCookies(cookies);
+    if(cookieStr != null && cookieStr.length > 0) {
+      headers[HttpHeaders.COOKIE] = cookieStr;
+      Application.logger.fine('enginiosocket send cookie: $cookieStr');
+    }
+    headers['origin'] = ('ws' == _uri.scheme ? 'http://' : 'https://') + '${_uri.host}:${_uri.port}';
+    headers['host'] = '${_uri.host}:${_uri.port}';
+    Application.logger.fine('establish engineiosocket connect: $uri');
+    socket = await WebSocket.connect(uri, headers: headers);
+    _subscription?.cancel();
+    _subscription = socket.transform(this.converter).listen(null)
+      ..onData((data) {
+        onPacket(data);
+      })
+      ..onError((e) {
+        onError(e);
+      });
+    Application.logger.fine('engineiosocket establish success: $uri');
+  }
+
+  tryReconnect() async {
+    if(autoReconnect && !forceClose) {
+      while(reconnectTrys < maxReconnectTrys) {
+        readyStatus = EngineIOSocketStatus.RECONNECT;
+        try {
+          Application.logger.fine('enginiosocket: $sid try reconnet $reconnectTrys');
+          _eventController.add(new EngineIOSocketEvent(EngineIOSocketEventType.RECONNECT_ATTEMPT));
+          await reconnect();
+          reconnectTrys = 0;
+          _eventController.add(new EngineIOSocketEvent(EngineIOSocketEventType.RECONNECT_SUCCESS));
+          return;
+        } catch(err) {
+          Application.logger.fine('enginiosocket: $sid error: $err');
+          reconnectTrys++;
+          await new Future.delayed(new Duration(milliseconds: reconnectInterval));
+        }
+      }
+      _eventController.add(new EngineIOSocketEvent(EngineIOSocketEventType.RECONNECT_FAIL));
+      close(new EngineIOReconnectFailException());
+      Application.logger.fine('enginiosocket: $sid exceed max retry: $maxReconnectTrys');
+      return;
+    }
+    close();
   }
 
   close([reason]) async {
     if(readyStatus == EngineIOSocketStatus.OPEN
-        || readyStatus == EngineIOSocketStatus.OPENING) {
+        || readyStatus == EngineIOSocketStatus.OPENING
+        || readyStatus == EngineIOSocketStatus.RECONNECT) {
+      forceClose = true;
       readyStatus = EngineIOSocketStatus.CLOSING;
-      String _reasonMsg = 'socket: $sid force close';
-      if(reason is Error || reason is Exception) {
-        _reasonMsg = reason.toString();
-      } else {
-        forceClose = true;
-      }
+//      String _reasonMsg = 'enginiosocket: $sid will be closed';
+//      if(reason is Error || reason is Exception) {
+//        _reasonMsg = reason.toString();
+//      } else {
+//
+//      }
       await socket.close();
-      onClose(_reasonMsg);
+      onClose(reason);
     }
   }
 
   ping() {
-    Application.logger.fine('socket: $sid ping');
+    Application.logger.fine('enginiosocket: $sid ping');
     this.sendPacket(new EngineIOPacket(type: EngineIOPacketType.PING));
   }
 
@@ -156,7 +197,7 @@ class EngineIOSocket  {
       new Stream.fromIterable(writeBuffer.toList())
           .transform(new EngineIOPacketEncoder()).listen(null)
         ..onData((data) {
-          Application.logger.fine('socket: $sid send: $data');
+          Application.logger.fine('enginiosocket: $sid send: $data');
           socket.add(data);
           _eventController.add(new EngineIOSocketEvent(EngineIOSocketEventType.SEND, data));
         })..onDone(() {
@@ -189,11 +230,12 @@ class EngineIOSocket  {
     _subscription.cancel();
     _pingTimeoutTimer.cancel();
     _pingIntervalTimer.cancel();
-    _eventController.add(new EngineIOSocketEvent(EngineIOSocketEventType.CLOSE));
+    Application.logger.fine('enginiosocket: $sid is closed');
+    _eventController.add(new EngineIOSocketEvent(EngineIOSocketEventType.CLOSE, reason));
   }
 
   onPacket(EngineIOPacket packet) {
-    Application.logger.fine('socket: $sid receive $packet');
+    Application.logger.fine('enginiosocket: $sid receive $packet');
     switch(packet.type) {
       case EngineIOPacketType.OPEN:
         onHandshake(packet);
@@ -224,8 +266,9 @@ class EngineIOSocket  {
     }
     _pingTimeoutTimer = new Timer(timeout, () {
       if(readyStatus == EngineIOSocketStatus.CLOSED) return;
-      Application.logger.fine('ping timeout');
-      onClose('ping timeout');
+      Application.logger.warning('enginiosocket: $sid ping timeout');
+      //close(new EngineIOPingTimeoutException());
+      tryReconnect();
     });
   }
 
@@ -234,16 +277,17 @@ class EngineIOSocket  {
     sid = data['sid'];
     pingInterval = new Duration(milliseconds: utils.convertToInteger(data['pingInterval']));
     pingTimeout = new Duration(milliseconds:  utils.convertToInteger(data['pingTimeout']));
+    if(readyStatus == EngineIOSocketStatus.OPENING) {
+      _eventController.add(new EngineIOSocketEvent(EngineIOSocketEventType.OPEN));
+    }
     onOpen();
     setPing();
   }
 
   onError(e) {
-    close(e);
-//    if(!_openCompleter.isCompleted) {
-//      _openCompleter.completeError(e);
+//    if(socket.readyState == WebSocket.CLOSING || socket.readyState == WebSocket.CLOSED) {
+//      tryReconnect();
 //    }
-    //_subscription.cancel(); //todo
     _eventController.add(new EngineIOSocketEvent(EngineIOSocketEventType.ERROR, e));
   }
 

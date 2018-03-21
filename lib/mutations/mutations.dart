@@ -43,6 +43,8 @@ class SetActiveUserMutation extends BaseMutation {
   @override
   exec() {
     $store.state.activeUser = user;
+    $store.commit(new SetUnreadInfoMutation(new UnreadInfo()));
+    $store.commit(new ClearRoomsMutation());
   }
 
 }
@@ -75,10 +77,88 @@ class SetUnreadInfoMutation extends BaseMutation {
 
 }
 
-//class AddMessagesToRoomMutation extends BaseMutation {
-//
-//  Message message
-//
-//  AddMessageToRoomMutation();
-//
-//}
+class AddMessagesToRoomMutation extends BaseMutation {
+
+  List<Message> messages;
+
+  int roomId;
+
+  AddMessagesToRoomMutation(this.roomId, this.messages);
+
+  @override
+  exec() {
+    $store.state.rooms[roomId].messages.addAll(messages);
+  }
+
+
+}
+
+class ClearMessagesFromRoomMutation extends BaseMutation {
+
+  int roomId;
+
+  ClearMessagesFromRoomMutation(this.roomId);
+
+  @override
+  exec() {
+    $store.state.rooms[roomId]?.messages?.clear();
+  }
+
+}
+
+class ClearRoomsMutation extends BaseMutation {
+
+  ClearRoomsMutation();
+
+  @override
+  exec() {
+    $store.state.rooms.clear();
+  }
+
+}
+
+class UpdateUnreadChatCountMutation extends BaseMutation {
+
+  int unreadChatCount = 0;
+
+  UpdateUnreadChatCountMutation(this.unreadChatCount);
+
+  @override
+  exec() {
+    $store.state.unreadInfo.unreadChatCount = unreadChatCount;
+  }
+
+}
+
+class UpdateRoomUnreadStatusMutation extends BaseMutation {
+
+  bool unread;
+
+  int roomId;
+
+  UpdateRoomUnreadStatusMutation(this.roomId, this.unread);
+
+  @override
+  exec() {
+    $store.state.rooms[this.roomId].unread = unread;
+  }
+
+}
+
+class UpdateRoomTeaserContentMutation extends BaseMutation {
+
+  int roomId;
+
+  String content;
+
+  UpdateRoomTeaserContentMutation(this.roomId, this.content);
+
+  @override
+  exec() {
+    Room room = $store.state.rooms[this.roomId];
+    if(room != null) {
+      room.teaser.content = content;
+    }
+  }
+
+}

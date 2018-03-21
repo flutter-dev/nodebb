@@ -48,7 +48,8 @@ class Room extends Object with Reactive {
       unread: json['unread'],
       users: users,
       maxChatMessageLength: json['maximumChatMessageLength'] ?? 1000,
-      teaser: new Teaser.fromJson(json['teaser'])
+      teaser: new Teaser.fromJson(json['teaser']),
+      messages: new ObservableList()
     );
     return room;
   }

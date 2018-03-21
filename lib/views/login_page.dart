@@ -4,8 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/widgets.dart';
 import 'package:nodebb/actions/actions.dart';
-import 'package:nodebb/views/base.dart';
 import 'package:nodebb/errors/errors.dart';
+import 'package:nodebb/main.dart';
+import 'package:nodebb/views/base.dart';
 
 class LoginPage extends BaseReactivePage {
   LoginPage({Key key, routeParams}) : super(key: key, routeParams: routeParams);
@@ -21,6 +22,7 @@ class _LoginPageState extends BaseReactiveState<LoginPage> {
   String password;
 
   _doLogin(BuildContext context) async {
+    FocusScope.of(context).requestFocus(new FocusNode());
     try {
       await $store.dispatch(new LoginAction(username, password));
     } on NodeBBLoginFailException {

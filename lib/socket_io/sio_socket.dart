@@ -168,9 +168,15 @@ class SocketIOSocket {
         SocketIOSocketEventType.RECEIVE,
         packet,
         () {
-          if(!sent) {
+          if(!sent && packet.id != null) {
+            SocketIOPacketType type;
+            if(packet.type == SocketIOPacketType.EVENT) {
+              type = SocketIOPacketType.ACK;
+            } else if(packet.type == SocketIOPacketType.BINARY_EVENT) {
+              type = SocketIOPacketType.BINARY_ACK;
+            }
             send(new SocketIOPacket(
-              type: SocketIOPacketType.ACK,
+              type: type,
               id: packet.id
             ));
             sent = true;
@@ -182,7 +188,6 @@ class SocketIOSocket {
   onAck(SocketIOPacket packet) {
     if(packet.id != null && acks[packet.id] != null) {
       Application.logger.fine('call ack ${packet.id} with ${packet.data}');
-      //todo remove handler
       acks[packet.id](packet);
       acks.remove(packet.id);
     } else {
@@ -218,7 +223,23 @@ class SocketIOSocket {
     if(ready) flush();
   }
 
-  sendPacket(SocketIOPacket packet) {
+//  ack(SocketIOPacket packet) {
+//    SocketIOPacketType type;
+//    if(packet.type == SocketIOPacketType.EVENT) {
+//      type = SocketIOPacketType.ACK;
+//    } else if(packet.type == SocketIOPacketType.BINARY_EVENT) {
+//      type = SocketIOPacketType.BINARY_ACK;
+//    } else {
+//      throw new SocketIOStateException('packet type must be SocketIOPacketType.EVENT or SocketIOPacketType.BINARY_EVENT');
+//    }
+//    if(packet.id == null) {
+//      throw new SocketIOParseException('paket id not found');
+//    }
+//    Application.logger.fine('send socketio packet ack: ${packet.id}');
+//    send(new SocketIOPacket(type: type, id: packet.id));
+//  }
+
+  _sendPacket(SocketIOPacket packet) {
     if(packet.namespace == null || packet.namespace == '') {
       packet.namespace = namespace;
     }
@@ -231,7 +252,7 @@ class SocketIOSocket {
 
   flush() {
     sendBuffer.forEach((SocketIOPacket packet) {
-      sendPacket(packet);
+      _sendPacket(packet);
     });
     sendBuffer.clear();
   }
@@ -240,12 +261,12 @@ class SocketIOSocket {
     if(io.readyStatus == EngineIOSocketStatus.OPEN) {
       if (namespace != '/') {
         if (query != null) {
-          sendPacket(new SocketIOPacket(
+          _sendPacket(new SocketIOPacket(
             type: SocketIOPacketType.CONNECT,
             namespace: namespace + '?' + utils.encodeUriQuery(query)
           ));
         } else {
-          sendPacket(new SocketIOPacket(
+          _sendPacket(new SocketIOPacket(
               type: SocketIOPacketType.CONNECT
           ));
         }
@@ -275,18 +296,13 @@ class SocketIOSocket {
     }
   }
 
-  StreamSubscription listen<Data>({SocketIOSocketEventType type = SocketIOSocketEventType.RECEIVE,onData, onError, onDone}) {
+  StreamSubscription listen({SocketIOSocketEventType type = SocketIOSocketEventType.RECEIVE,onData, onError, onDone}) {
     StreamSubscription ss;
     ss = eventStream
-      .where((SocketIOSocketEvent event)=> event.type == type)
-      .map((SocketIOSocketEvent event) {
-        if(event.data is Data) {
-          return event as Data;
-        } else {
-          throw event.data;
-        }
+      .where((SocketIOSocketEvent event) {
+        return event.type == type;
       }).listen(null)
-      ..onData((Data data) {
+      ..onData((data) {
         if(onData != null) {
           onData(data);
         }

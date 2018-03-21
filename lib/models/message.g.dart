@@ -7,6 +7,19 @@ part of message;
 // **************************************************************************
 
 class _$Message extends Message {
+  int _id;
+  int get id {
+    $observe('id');
+    _id = _id ?? 0;
+    return _id;
+  }
+
+  set id(int id) {
+    if (id != null && id == _id) return;
+    _id = id;
+    $notify('id');
+  }
+
   User _user;
   User get user {
     $observe('user');
@@ -61,12 +74,14 @@ class _$Message extends Message {
 
   _$Message.$() : super.$();
   factory _$Message({
+    int id: 0,
     User user,
     DateTime timestamp,
     String content: '',
     MessageType type,
   }) {
     return new _$Message.$()
+      .._id = id
       .._user = user
       .._timestamp = timestamp
       .._content = content

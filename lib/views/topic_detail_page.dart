@@ -5,7 +5,7 @@ import 'package:nodebb/models/models.dart';
 import 'package:nodebb/services/remote_service.dart';
 import 'package:nodebb/utils/utils.dart' as utils;
 import 'package:nodebb/views/base.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:nodebb/widgets/widgets.dart';
 
 class TopicDetailPage extends BaseReactivePage {
   TopicDetailPage({key, routeParams}): super(key: key, routeParams: routeParams);
@@ -19,6 +19,8 @@ class TopicDetailPage extends BaseReactivePage {
 class _TopicDetailState extends BaseReactiveState<TopicDetailPage> {
 
   int tid;
+
+  ObservableList<Post> posts = new ObservableList();
 
   ReactiveProp<Post> post = new ReactiveProp();
 
@@ -35,7 +37,10 @@ class _TopicDetailState extends BaseReactiveState<TopicDetailPage> {
     status.self = RequestStatus.PENDING;
     RemoteService.getInstance().fetchTopicDetail(tid).then((Map data) {
       List postsFromData = data['posts'] ?? [];
-      post.self = new Post.fromMap(postsFromData[0]);
+      for(var data in postsFromData) {
+        posts.add(new Post.fromMap(data));
+      }
+      //post.self = new Post.fromMap(postsFromData[0]);
       status.self = RequestStatus.SUCCESS;
     }).catchError((err, stacktrace) {
       print(err);
@@ -49,7 +54,7 @@ class _TopicDetailState extends BaseReactiveState<TopicDetailPage> {
     Widget body;
     switch(status.self) {
       case RequestStatus.SUCCESS:
-        body = new TopicContent(content: post.self?.content ?? '');
+        body = new TopicContent(posts: posts);
         break;
       case RequestStatus.ERROR:
         body = new Center(
@@ -89,13 +94,74 @@ class _TopicDetailState extends BaseReactiveState<TopicDetailPage> {
 
 class TopicContent extends StatelessWidget {
 
-  final String content;
+  final ObservableList<Post> posts;
 
-  TopicContent({this.content = ''});
+  TopicContent({this.posts});
 
   @override
   Widget build(BuildContext context) {
-    return new Markdown(data: content);
+    List<Widget> additionalChildren = [];
+    additionalChildren.add(new Row(
+//      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        new Expanded(
+          child: new Align(
+            child: new Container(
+              alignment: Alignment.center,
+              decoration: new BoxDecoration(
+                shape: BoxShape.circle,
+                boxShadow: [new BoxShadow(color: Colors.black45, blurRadius: 2.0)],
+                color: Colors.red
+              ),
+              width: 90.0,
+              height: 90.0,
+              child: new Text('点赞', style: new TextStyle(fontSize: 24.0, color: Colors.white),),
+            )
+          )
+        ),
+        new Expanded(
+          child: new Align(
+            child: new Container(
+              alignment: Alignment.center,
+              decoration: new BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.green,
+                boxShadow: [new BoxShadow(color: Colors.black45, blurRadius: 2.0)],
+              ),
+              width: 90.0,
+              height: 90.0,
+              child: new Text('收藏', style: new TextStyle(fontSize: 24.0, color: Colors.white),),
+            )
+          )
+        ),
+        new Expanded(
+            child: new Align(
+              child: new Container(
+                alignment: Alignment.center,
+                decoration: new BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.blue,
+                  boxShadow: [new BoxShadow(color: Colors.black45, blurRadius: 2.0)],
+                ),
+                width: 90.0,
+                height: 90.0,
+                child: new Text('评论', style: new TextStyle(fontSize: 24.0, color: Colors.white),),
+              )
+            )
+        ),
+
+      ],
+    ));
+    return new Markdown(data: posts[0].content, additionalChildren: additionalChildren);
+//    return new ListView.builder(
+//      itemBuilder: (BuildContext context, int index) {
+//        if(index == 0 && posts[0] != null) {
+//          return new MarkdownBody(data: posts[0].content ?? '');
+//        } else {
+//          return new Container();
+//        }
+//      }
+//    );
   }
 
 }
