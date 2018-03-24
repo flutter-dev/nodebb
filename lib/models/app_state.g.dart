@@ -33,6 +33,19 @@ class _$AppState extends AppState {
     $notify('unreadInfo');
   }
 
+  NodeBBNotification _notification;
+  NodeBBNotification get notification {
+    $observe('notification');
+
+    return _notification;
+  }
+
+  set notification(NodeBBNotification notification) {
+    if (notification != null && notification == _notification) return;
+    _notification = notification;
+    $notify('notification');
+  }
+
   ObservableMap<int, Topic> _topics;
   ObservableMap<int, Topic> get topics {
     $observe('topics');
@@ -89,6 +102,7 @@ class _$AppState extends AppState {
   factory _$AppState({
     User activeUser,
     UnreadInfo unreadInfo,
+    NodeBBNotification notification,
     ObservableMap<int, Topic> topics,
     ObservableMap<int, Category> categories,
     ObservableMap<int, User> users,
@@ -97,6 +111,7 @@ class _$AppState extends AppState {
     return new _$AppState.$()
       .._activeUser = activeUser
       .._unreadInfo = unreadInfo
+      .._notification = notification
       .._topics = topics
       .._categories = categories
       .._users = users

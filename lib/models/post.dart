@@ -1,6 +1,7 @@
 library post;
 import 'package:flutter_wills_gen/wills.dart';
 import 'package:flutter_wills/flutter_wills.dart';
+import 'package:nodebb/models/user.dart';
 import 'package:nodebb/utils/utils.dart' as utils;
 part 'post.g.dart';
 
@@ -11,7 +12,7 @@ abstract class Post extends Object with Reactive {
 
   int pid; //post id
 
-  int uid; //用户 ID
+  User user; //用户 ID
 
   bool downVoted; //已踩
 
@@ -20,6 +21,10 @@ abstract class Post extends Object with Reactive {
   int upVotes; //点赞数
 
   int downVotes; //踩数
+
+  int votes; //赞总数
+
+  DateTime timestamp;
 
   String content; //内容
 
@@ -30,11 +35,13 @@ abstract class Post extends Object with Reactive {
       content: map['content'],
       tid: utils.convertToInteger(map['tid']),
       pid: utils.convertToInteger(map['pid']),
-      uid: utils.convertToInteger(map['uid']),
-      downVotes: map['downvotes'],
-      upVotes: map['upvotes'],
-      upVoted: map['upvoted'],
-      downVoted: map['downvoted'],
+      user: new User.fromJson(map['user']),
+      downVotes: map['downvotes'] ?? 0,
+      upVotes: map['upvotes'] ?? 0,
+      upVoted: map['upvoted'] ?? 0,
+      downVoted: map['downvoted'] ?? 0,
+      votes: map['votes'] ?? 0,
+      timestamp: new DateTime.fromMillisecondsSinceEpoch(map['timestamp'])
     );
     return post;
   }

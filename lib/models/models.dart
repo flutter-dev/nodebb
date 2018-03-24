@@ -9,3 +9,4 @@ export 'message.dart';
 export 'unread_info.dart';
 export 'room.dart';
 export 'teaser.dart';
+export 'notification.dart';

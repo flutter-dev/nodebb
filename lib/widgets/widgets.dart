@@ -70,6 +70,7 @@ class _MessageWidgetState extends BaseReactiveState<MessageWidget> {
       return new Container(
           padding: const EdgeInsets.only(top: 12.0, bottom: 12.0, right: 64.0, left: 12.0),
           child: new Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               new SizedBox(
                 width: 40.0,
@@ -109,6 +110,7 @@ class _MessageWidgetState extends BaseReactiveState<MessageWidget> {
       return new Container(
         padding: const EdgeInsets.only(top: 12.0, bottom: 12.0, right: 12.0, left: 64.0),
         child: new Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             new Expanded(
               child: new Column(
@@ -125,7 +127,7 @@ class _MessageWidgetState extends BaseReactiveState<MessageWidget> {
                           ),
                           child: new Text(
                             widget.message.type == MessageType.SEND_PENDING ? '[待确认]' +  widget.message.content : widget.message.content,
-                            textAlign: TextAlign.right,
+                            textAlign: TextAlign.left,
                           ),
                         ),
                       )
@@ -177,10 +179,7 @@ class Markdown extends MarkdownWidget {
 
   @override
   Widget build(BuildContext context, List<Widget> children) {
-    if(additionalChildren != null) {
-      children.addAll(additionalChildren);
-    }
-    return new ListView(padding: padding, children: children);
+    return new ListView(padding: padding, children: <Widget>[]..addAll(children)..addAll(additionalChildren));
   }
 }
 

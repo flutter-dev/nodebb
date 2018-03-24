@@ -162,3 +162,49 @@ class UpdateRoomTeaserContentMutation extends BaseMutation {
   }
 
 }
+
+
+
+class ClearTopicsMutation extends BaseMutation {
+
+  @override
+  exec() {
+    $store.state.topics.clear();
+  }
+
+}
+
+class UpdateNotificationMutation extends BaseMutation {
+
+  bool newReply;
+
+  bool newChat;
+
+  bool newFollow;
+
+  bool groupInvite;
+
+  bool newTopic;
+
+  UpdateNotificationMutation({this.newReply, this.newChat, this.newFollow, this.groupInvite, this.newTopic});
+
+  @override
+  exec() {
+    if(newReply != null) {
+      $store.state.notification.newReply = newReply;
+    }
+    if(newChat != null) {
+      $store.state.notification.newChat = newChat;
+    }
+    if(newFollow != null) {
+      $store.state.notification.newFollow = newFollow;
+    }
+    if(groupInvite != null) {
+      $store.state.notification.groupInvite = groupInvite;
+    }
+    if(newTopic != null) {
+      $store.state.notification.newTopic = newTopic;
+    }
+  }
+
+}

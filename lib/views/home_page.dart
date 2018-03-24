@@ -59,7 +59,7 @@ class _HomePageState extends BaseReactiveState<HomePage> with TickerProviderStat
       currentIndex: this._currentIndex,
       items: <BottomNavigationBarItem>[
         new BottomNavigationBarItem(
-          icon: _buildBottomNavBarIcon(Icons.explore, info.unreadNewTopicCount > 0),
+          icon: _buildBottomNavBarIcon(Icons.explore, $store.state.notification.newTopic),
           title: const Text('话题', style: const TextStyle(fontSize: 12.0))
         ),
         new BottomNavigationBarItem(
