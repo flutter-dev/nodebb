@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_wills/flutter_wills.dart';
 import 'package:nodebb/actions/actions.dart';
 import 'package:nodebb/application/application.dart';
-import 'package:nodebb/models/models.dart';
+
 import 'package:nodebb/mutations/mutations.dart';
 import 'package:nodebb/services/io_service.dart';
 import 'package:nodebb/utils/utils.dart' as utils;
@@ -13,6 +13,7 @@ import 'package:nodebb/views/home_page.dart';
 import 'package:nodebb/views/login_page.dart';
 import 'package:nodebb/views/register_page.dart';
 import 'package:nodebb/views/topic_detail_page.dart';
+import 'package:nodebb/models/models.dart';
 
 const APP_TITLE = 'Flutter Dev';
 
@@ -39,6 +40,7 @@ class _AppState extends State<App> with WidgetsBindingObserver {
 
   Store<AppState> store = new Store<AppState>(state: new AppState(
       unreadInfo: new UnreadInfo(),
+      notification: new NodeBBNotification(),
       topics: new ObservableMap.linked(),
       categories: new ObservableMap.linked(),
       users: new ObservableMap.linked(),
@@ -98,6 +100,25 @@ class _AppState extends State<App> with WidgetsBindingObserver {
     ioSub = IOService.getInstance().eventStream.listen(null)..onData((NodeBBEvent event) {
       switch(event.type) {
         case NodeBBEventType.NEW_NOTIFICATION:
+          Map data = event.data;
+          String type = data['type'];
+          switch(type) {
+            case 'new-reply':
+              store.commit(new UpdateNotificationMutation(newReply: true));
+              break;
+            case 'new-chat':
+              store.commit(new UpdateNotificationMutation(newChat: true));
+              break;
+            case 'follow':
+              store.commit(new UpdateNotificationMutation(newFollow: true));
+              break;
+            case 'group-invite':
+              store.commit(new UpdateNotificationMutation(groupInvite: true));
+              break;
+            case 'new-topic':
+              store.commit(new UpdateNotificationMutation(newTopic: true));
+              break;
+          }
           break;
         case NodeBBEventType.UPDATE_UNREAD_CHAT_COUNT:
           store.commit(new UpdateUnreadChatCountMutation(utils.convertToInteger(event.data)));
@@ -116,6 +137,11 @@ class _AppState extends State<App> with WidgetsBindingObserver {
           break;
         case NodeBBEventType.UPDATE_NOTIFICATION_COUNT:
           break;
+        case NodeBBEventType.NEW_TOPIC:
+          store.commit(new UpdateNotificationMutation(newTopic: true));
+          break;
+        case NodeBBEventType.NEW_POST:
+          break;
       }
       event.ack();
     });
@@ -131,25 +157,25 @@ class _AppState extends State<App> with WidgetsBindingObserver {
     _addRoute('/topic/:tid', (Map<String, String> params) {
       return new MaterialPageRoute(builder: (BuildContext context) {
         return new TopicDetailPage(routeParams: params);
-      });
+      }, maintainState: false);
     });
 
     _addRoute('/login', (Map<String, String> params) {
       return new MaterialPageRoute(builder: (BuildContext context) {
         return new LoginPage();
-      });
+      }, maintainState: false);
     });
 
     _addRoute('/register', (Map<String, String> params) {
       return new MaterialPageRoute(builder: (BuildContext context) {
         return new RegisterPage();
-      });
+      }, maintainState: false);
     });
 
     _addRoute('/chat/:roomId', (Map<String, String> params) {
       return new MaterialPageRoute(builder: (BuildContext context) {
         return new ChatPage(routeParams: params);
-      });
+      }, maintainState: false);
     });
   }
 

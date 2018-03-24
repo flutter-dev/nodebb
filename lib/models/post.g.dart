@@ -33,17 +33,17 @@ class _$Post extends Post {
     $notify('pid');
   }
 
-  int _uid;
-  int get uid {
-    $observe('uid');
-    _uid = _uid ?? 0;
-    return _uid;
+  User _user;
+  User get user {
+    $observe('user');
+
+    return _user;
   }
 
-  set uid(int uid) {
-    if (uid != null && uid == _uid) return;
-    _uid = uid;
-    $notify('uid');
+  set user(User user) {
+    if (user != null && user == _user) return;
+    _user = user;
+    $notify('user');
   }
 
   bool _downVoted;
@@ -98,6 +98,32 @@ class _$Post extends Post {
     $notify('downVotes');
   }
 
+  int _votes;
+  int get votes {
+    $observe('votes');
+    _votes = _votes ?? 0;
+    return _votes;
+  }
+
+  set votes(int votes) {
+    if (votes != null && votes == _votes) return;
+    _votes = votes;
+    $notify('votes');
+  }
+
+  DateTime _timestamp;
+  DateTime get timestamp {
+    $observe('timestamp');
+
+    return _timestamp;
+  }
+
+  set timestamp(DateTime timestamp) {
+    if (timestamp != null && timestamp == _timestamp) return;
+    _timestamp = timestamp;
+    $notify('timestamp');
+  }
+
   String _content;
   String get content {
     $observe('content');
@@ -115,21 +141,25 @@ class _$Post extends Post {
   factory _$Post({
     int tid: 0,
     int pid: 0,
-    int uid: 0,
+    User user,
     bool downVoted: false,
     bool upVoted: false,
     int upVotes: 0,
     int downVotes: 0,
+    int votes: 0,
+    DateTime timestamp,
     String content: '',
   }) {
     return new _$Post.$()
       .._tid = tid
       .._pid = pid
-      .._uid = uid
+      .._user = user
       .._downVoted = downVoted
       .._upVoted = upVoted
       .._upVotes = upVotes
       .._downVotes = downVotes
+      .._votes = votes
+      .._timestamp = timestamp
       .._content = content;
   }
 }

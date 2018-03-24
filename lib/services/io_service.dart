@@ -15,7 +15,9 @@ enum NodeBBEventType {
   RECEIVE_CHATS,
   UPDATE_UNREAD_CHAT_COUNT,
   UPDATE_NOTIFICATION_COUNT,
-  MARKED_AS_READ
+  MARKED_AS_READ,
+  NEW_POST,
+  NEW_TOPIC
 }
 
 class NodeBBEvent {
@@ -136,6 +138,24 @@ class IOService {
               }
             ));
             break;
+          case 'event:new_post':
+            _eventController.add(new NodeBBEvent(
+              type: NodeBBEventType.NEW_POST,
+              data: json[1],
+              ack: () {
+                if(event.ack != null) event.ack();
+              }
+            ));
+            break;
+          case 'event:new_topic':
+            _eventController.add(new NodeBBEvent(
+                type: NodeBBEventType.NEW_TOPIC,
+                data: json[1],
+                ack: () {
+                  if(event.ack != null) event.ack();
+                }
+            ));
+            break;
         }
       }
    });
@@ -216,5 +236,35 @@ class IOService {
  markRead(int roomId) {
    getSocket().send(packet(data: ['modules.chats.markRead', roomId]));
  }
+
+ Future<int> upvote(int topicId, int postId) {
+   Completer<int> completer = new Completer<int>();
+   getSocket().send(packet(data: ["posts.upvote", {"pid": postId, "room_id": "topic_$topicId"}]), (SocketIOPacket packet) {
+     try {
+       var data = packet.data[1];
+       completer.complete(data['post']['votes']);
+     } catch(err) {
+       completer.completeError(err);
+     }
+   });
+   return completer.future;
+ }
+
+ Future<Post> reply({int topicId, int postId, String content}) {
+   Completer<Post> completer = new Completer();
+   getSocket().send(packet(data: ["posts.reply",{"tid": topicId,"content": content,"toPid": postId}]), (SocketIOPacket packet) {
+     try {
+       var data = packet.data[1];
+       data['content'] = content;
+       completer.complete(new Post.fromMap(data));
+     } catch(err) {
+       completer.completeError(err);
+     }
+   });
+   return completer.future;
+ }
+
+ //422["user.setCategorySort","newest_to_oldest"]
+  //Future setCate
 
 }

@@ -147,26 +147,29 @@ class _PersonalFragmentState extends BaseReactiveState<PersonalFragment> {
           color: Colors.red,
           textColor: Colors.white,
           onPressed: () {
-            showDialog(
-              context: context,
-              child: new AlertDialog(
-                content: const Text('确认要登出？'),
-                actions: <Widget>[
-                  new FlatButton(
-                      child: const Text('取消'),
-                      onPressed: () { Navigator.pop(context, false); }
-                  ),
-                  new FlatButton(
-                      child: const Text('确认'),
-                      onPressed: () { Navigator.pop(context, true); }
-                  )
-                ],
-              ),
-            ).then<bool>((value) {
-              if(value != null && value) {
-                $store.dispatch(new LogoutAction());
-              }
+            $confirm('确认要登出？', onConfirm: () {
+              $store.dispatch(new LogoutAction());
             });
+//            showDialog(
+//              context: context,
+//              child: new AlertDialog(
+//                content: const Text('确认要登出？'),
+//                actions: <Widget>[
+//                  new FlatButton(
+//                      child: const Text('取消'),
+//                      onPressed: () { Navigator.pop(context, false); }
+//                  ),
+//                  new FlatButton(
+//                      child: const Text('确认'),
+//                      onPressed: () { Navigator.pop(context, true); }
+//                  )
+//                ],
+//              ),
+//            ).then<bool>((value) {
+//              if(value != null && value) {
+//                $store.dispatch(new LogoutAction());
+//              }
+//            });
           },
           child: new Text('登出', style: const TextStyle(fontSize: 18.0),),
         ),

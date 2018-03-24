@@ -1,14 +1,18 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_wills/flutter_wills.dart';
 import 'package:nodebb/enums/enums.dart';
 import 'package:nodebb/models/models.dart';
+import 'package:nodebb/services/io_service.dart';
 import 'package:nodebb/services/remote_service.dart';
 import 'package:nodebb/utils/utils.dart' as utils;
 import 'package:nodebb/views/base.dart';
 import 'package:nodebb/widgets/widgets.dart';
 
 class TopicDetailPage extends BaseReactivePage {
-  TopicDetailPage({key, routeParams}): super(key: key, routeParams: routeParams);
+  TopicDetailPage({key, routeParams})
+      : super(key: key, routeParams: routeParams);
 
   @override
   _TopicDetailState createState() {
@@ -17,7 +21,6 @@ class TopicDetailPage extends BaseReactivePage {
 }
 
 class _TopicDetailState extends BaseReactiveState<TopicDetailPage> {
-
   int tid;
 
   ObservableList<Post> posts = new ObservableList();
@@ -37,10 +40,9 @@ class _TopicDetailState extends BaseReactiveState<TopicDetailPage> {
     status.self = RequestStatus.PENDING;
     RemoteService.getInstance().fetchTopicDetail(tid).then((Map data) {
       List postsFromData = data['posts'] ?? [];
-      for(var data in postsFromData) {
+      for (var data in postsFromData) {
         posts.add(new Post.fromMap(data));
       }
-      //post.self = new Post.fromMap(postsFromData[0]);
       status.self = RequestStatus.SUCCESS;
     }).catchError((err, stacktrace) {
       print(err);
@@ -52,116 +54,216 @@ class _TopicDetailState extends BaseReactiveState<TopicDetailPage> {
   @override
   Widget render(BuildContext context) {
     Widget body;
-    switch(status.self) {
+    switch (status.self) {
       case RequestStatus.SUCCESS:
         body = new TopicContent(posts: posts);
         break;
       case RequestStatus.ERROR:
         body = new Center(
-          child: new Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              new Text('出错了！'),
-              new MaterialButton(
-                color: Colors.blue,
-                textColor: Colors.white,
-                onPressed: () {
-                  var state = context.ancestorStateOfType(const TypeMatcher<_TopicDetailState>()) as _TopicDetailState;
-                  state.fetchContent();
-                },
-                child: new Text('重试'),
-              )
-            ],
-          )
-        );
+            child: new Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            new Text('出错了！'),
+            new MaterialButton(
+              color: Colors.blue,
+              textColor: Colors.white,
+              onPressed: () {
+                var state = context.ancestorStateOfType(
+                        const TypeMatcher<_TopicDetailState>())
+                    as _TopicDetailState;
+                state.fetchContent();
+              },
+              child: new Text('重试'),
+            )
+          ],
+        ));
         break;
       default:
-        body = new Center(
-          child:  new Text('加载中...')
-        );
+        body = new Center(child: new Text('加载中...'));
         break;
     }
     return new Scaffold(
-      appBar: new AppBar(
-        title: new Text('${$store.state.topics[tid].title}')
-      ),
-      body: body
-    );
+        appBar:
+            new AppBar(title: new Text('${$store.state.topics[tid].title}')),
+        body: body);
   }
-
 }
 
-class TopicContent extends StatelessWidget {
+class TopicContent extends BaseReactiveWidget {
 
   final ObservableList<Post> posts;
 
   TopicContent({this.posts});
 
   @override
-  Widget build(BuildContext context) {
-    List<Widget> additionalChildren = [];
-    additionalChildren.add(new Row(
-//      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: <Widget>[
-        new Expanded(
-          child: new Align(
-            child: new Container(
-              alignment: Alignment.center,
-              decoration: new BoxDecoration(
-                shape: BoxShape.circle,
-                boxShadow: [new BoxShadow(color: Colors.black45, blurRadius: 2.0)],
-                color: Colors.red
-              ),
-              width: 90.0,
-              height: 90.0,
-              child: new Text('点赞', style: new TextStyle(fontSize: 24.0, color: Colors.white),),
-            )
-          )
-        ),
-        new Expanded(
-          child: new Align(
-            child: new Container(
-              alignment: Alignment.center,
-              decoration: new BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.green,
-                boxShadow: [new BoxShadow(color: Colors.black45, blurRadius: 2.0)],
-              ),
-              width: 90.0,
-              height: 90.0,
-              child: new Text('收藏', style: new TextStyle(fontSize: 24.0, color: Colors.white),),
-            )
-          )
-        ),
-        new Expanded(
-            child: new Align(
-              child: new Container(
-                alignment: Alignment.center,
-                decoration: new BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.blue,
-                  boxShadow: [new BoxShadow(color: Colors.black45, blurRadius: 2.0)],
-                ),
-                width: 90.0,
-                height: 90.0,
-                child: new Text('评论', style: new TextStyle(fontSize: 24.0, color: Colors.white),),
-              )
-            )
-        ),
+  BaseReactiveState<ReactiveWidget> createState() {
+    return new _TopicContentState();
+  }
+}
 
+class _TopicContentState extends BaseReactiveState<TopicContent> {
+
+  _buildInfoBar() {
+    Post post = widget.posts[0];
+    return new Column(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: <Widget>[
+        new Padding(
+          child: const Divider(height: 1.0,),
+            padding: const EdgeInsets.only(top: 16.0, bottom: 8.0)
+        ),
+        new Text(
+            '${post.votes} 赞 · ${post.timestamp.year}-${post.timestamp.month}-${post.timestamp.day}',
+          style: const TextStyle(color: Colors.grey),
+        )
       ],
-    ));
-    return new Markdown(data: posts[0].content, additionalChildren: additionalChildren);
-//    return new ListView.builder(
-//      itemBuilder: (BuildContext context, int index) {
-//        if(index == 0 && posts[0] != null) {
-//          return new MarkdownBody(data: posts[0].content ?? '');
-//        } else {
-//          return new Container();
-//        }
-//      }
-//    );
+    );
   }
 
+  _buildOptionBar() {
+    Post post = widget.posts[0];
+    return new Container(
+      padding: new EdgeInsets.only(top: 32.0, bottom: 16.0),
+      child: new ButtonTheme(
+        shape: new CircleBorder(),
+        minWidth: 90.0,
+        height: 90.0,
+        child: new Row(
+          children: <Widget>[
+            new Expanded(
+              child: new Align(
+                child: new MaterialButton(
+                  onPressed: () {
+                    if($store.state.activeUser == null) {
+                      $confirm('点赞需要先登录~', onConfirm: () {
+                        new Timer(const Duration(milliseconds: 300), () {
+                          Navigator.of(context).pushNamed('/login');
+                        });
+                      }, onConfirmBtnTxt: '登录');
+                    } else if($store.state.activeUser.uid == post.user.uid) {
+                      Scaffold.of(context).showSnackBar(new SnackBar(
+                        content: new Text('提示：不可以点赞自己的文章'),
+                        backgroundColor: Colors.blue,
+                      ));
+                    } else if(post.upVoted) {
+                      Scaffold.of(context).showSnackBar(new SnackBar(
+                        content: new Text('提示：你已点赞过该文章'),
+                        backgroundColor: Colors.blue,
+                      ));
+                    } else {
+                      IOService.getInstance().upvote(post.tid, post.pid).then((int votes) {
+                        post.votes = votes;
+                        Scaffold.of(context).showSnackBar(new SnackBar(
+                          content: new Text('点赞+1！'),
+                          backgroundColor: Colors.green,
+                        ));
+                      }).catchError((err) {
+                        Scaffold.of(context).showSnackBar(new SnackBar(
+                          content: new Text('点赞失败！请重新尝试'),
+                          backgroundColor: Colors.red,
+                        ));
+                      });
+                    }
+                  },
+                  color: Colors.red,
+                  child: new Text('点赞',
+                      style: new TextStyle(fontSize: 24.0, color: Colors.white)
+                  )
+                ),
+              )
+            ),
+            new Expanded(
+              child: new Align(
+                child: new MaterialButton(
+                  onPressed: () {},
+                  color: Colors.green,
+                  child: new Text('收藏', style: new TextStyle(fontSize: 24.0, color: Colors.white))
+                )
+              )
+            ),
+            new Expanded(
+              child: new Align(
+                child: new MaterialButton(
+                  onPressed: () {
+                    if($store.state.activeUser == null) {
+                      $confirm('留言需要先登录~', onConfirm: () {
+                        new Timer(const Duration(milliseconds: 300), () {
+                          Navigator.of(context).pushNamed('/login');
+                        });
+                      }, onConfirmBtnTxt: '登录');
+                    } else {
+
+                    }
+                  },
+                  color: Colors.blue,
+                  child: new Text('留言', style: new TextStyle(fontSize: 24.0, color: Colors.white))
+                )
+              )
+            ),
+          ],
+        )
+      )
+    );
+  }
+
+  _buildComments() {
+    List<Widget> comments = [];
+    widget.posts.skip(1).forEach((Post post) {
+      comments.add(new Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          new Container(
+            width: 42.0,
+            height: 42.0,
+            margin: const EdgeInsets.only(right: 12.0),
+            alignment: Alignment.topCenter,
+            child: new NodeBBAvatar(
+              picture: post.user.picture,
+              iconBgColor: post.user.iconBgColor,
+              iconText: post.user.iconText,
+            ),
+          ),
+          new Expanded(
+            child:
+            new Column(
+              children: <Widget>[
+                new Container(
+                  padding: const EdgeInsets.symmetric(vertical: 12.0),
+                  child: new Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      new Text('${post.user.userName}:', style: const TextStyle(fontSize: 14.0),),
+                      new Padding(
+                        padding: const EdgeInsets.only(top: 8.0, bottom: 4.0),
+                        child: new Text(post.content, style: const TextStyle(fontSize: 14.0),),
+                      ),
+                      new Align(
+                        alignment: Alignment.bottomRight,
+                        child: new Text(
+                          '${post.timestamp.year}-${post.timestamp.month}-${post.timestamp.day}',
+                          style: const TextStyle(fontSize: 12.0, color: Colors.grey),
+                        )
+                      )
+                    ],
+                  ),
+                ),
+                new Divider(height: 1.0,)
+              ],
+            )
+          )
+        ],
+      ));
+    });
+    return comments;
+  }
+
+  @override
+  Widget render(BuildContext context) {
+    List<Widget> additionalChildren = [];
+    additionalChildren.add(_buildInfoBar());
+    additionalChildren.add(_buildOptionBar());
+    additionalChildren.addAll(_buildComments());
+    return new Markdown(data: widget.posts[0].content, additionalChildren: additionalChildren);
+  }
 }

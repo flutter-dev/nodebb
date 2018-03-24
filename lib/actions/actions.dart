@@ -12,15 +12,26 @@ abstract class BaseRunUniqueAction<S> extends WillsRunUniqueAction<Store<AppStat
 
 class FetchTopicsAction extends BaseRunLastAction {
 
+  int start;
+
+  int count;
+
+  bool clearBefore;
+
+  FetchTopicsAction({this.start = 0, this.count = 20, this.clearBefore = false});
+
   @override
   Stream exec() async* {
     var data;
-    yield data = await RemoteService.getInstance().fetchTopics();
+    yield data = await RemoteService.getInstance().fetchTopics(start, count);
     yield data;
     List topicsFromData = data['topics'] ?? [];
     var topics = new List<Topic>();
     for(var topic in topicsFromData) {
       topics.add(new Topic.fromJson(topic));
+    }
+    if(clearBefore) {
+      $store.commit(new ClearTopicsMutation());
     }
     $store.commit(new AddTopicsMutation(topics));
   }

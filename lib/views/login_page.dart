@@ -5,7 +5,6 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/widgets.dart';
 import 'package:nodebb/actions/actions.dart';
 import 'package:nodebb/errors/errors.dart';
-import 'package:nodebb/main.dart';
 import 'package:nodebb/views/base.dart';
 
 class LoginPage extends BaseReactivePage {
@@ -33,7 +32,8 @@ class _LoginPageState extends BaseReactiveState<LoginPage> {
 
     }
     Scaffold.of(context).showSnackBar(new SnackBar(
-      content: new Text('登录成功！ ${$store.state.activeUser.userName} 欢迎回来')
+      content: new Text('登录成功！ ${$store.state.activeUser.userName} 欢迎回来'),
+      backgroundColor: Colors.green,
     ));
     new Timer(const Duration(seconds: 1), () {
       Navigator.of(context).pop();
