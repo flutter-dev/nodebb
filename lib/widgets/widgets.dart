@@ -47,7 +47,6 @@ class NodeBBAvatar extends StatelessWidget {
 
 }
 
-
 class MessageWidget extends BaseReactiveWidget {
 
   final Message message;
@@ -95,7 +94,7 @@ class _MessageWidgetState extends BaseReactiveState<MessageWidget> {
                               color: Colors.white70
                           ),
                           child: new Text(
-                            widget.message.content,
+                            widget.message.content.replaceAll(RegExp(r'\n$'), ''),
                           ),
                         ),
                       )
@@ -126,7 +125,9 @@ class _MessageWidgetState extends BaseReactiveState<MessageWidget> {
                               color: Colors.lightGreen
                           ),
                           child: new Text(
-                            widget.message.type == MessageType.SEND_PENDING ? '[待确认]' +  widget.message.content : widget.message.content,
+                            widget.message.type == MessageType.SEND_PENDING ?
+                              '[待确认]' +  widget.message.content.replaceAll(RegExp(r'\n$'), '') :
+                              widget.message.content.replaceAll(RegExp(r'\n$'), ''),
                             textAlign: TextAlign.left,
                           ),
                         ),
@@ -150,7 +151,6 @@ class _MessageWidgetState extends BaseReactiveState<MessageWidget> {
     }
   }
 }
-
 
 class Markdown extends MarkdownWidget {
 

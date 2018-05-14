@@ -6,9 +6,13 @@ import 'package:nodebb/mutations/mutations.dart';
 import 'package:nodebb/services/io_service.dart';
 import 'package:nodebb/services/remote_service.dart';
 
+abstract class BaseAction<S> extends WillsAction<Store<AppState>, S> {}
+
 abstract class BaseRunLastAction<S> extends WillsRunLastAction<Store<AppState>, S> {}
 
 abstract class BaseRunUniqueAction<S> extends WillsRunUniqueAction<Store<AppState>, S> {}
+
+abstract class BaseRunQueueAction<S> extends WillsRunQueueAction<Store<AppState>, S> {}
 
 class FetchTopicsAction extends BaseRunLastAction {
 
@@ -34,6 +38,7 @@ class FetchTopicsAction extends BaseRunLastAction {
       $store.commit(new ClearTopicsMutation());
     }
     $store.commit(new AddTopicsMutation(topics));
+    yield topics;
   }
 
 }
@@ -90,6 +95,42 @@ class FetchRecentChatAction extends BaseRunLastAction {
     yield data;
     //nextStart = data['nextStart'];
     $store.commit(new AddRoomsMutation(data['rooms']));
+  }
+
+}
+
+class PostCommentAction extends BaseAction<Post> {
+
+  int topicId;
+
+  int postId;
+
+  String comment;
+
+  PostCommentAction({this.topicId, this.postId, this.comment});
+
+  @override
+  Stream exec() async* {
+    Post post;
+    yield post = await IOService.getInstance().reply(topicId: topicId, postId: postId, content: comment);
+    yield post;
+  }
+
+}
+
+class DoBookmarkAction extends BaseAction<Map> {
+
+  int topicId;
+
+  int postId;
+
+  DoBookmarkAction({this.topicId, this.postId});
+
+  @override
+  Stream exec() async* {
+    var data;
+    yield data = await IOService.getInstance().bookmark(topicId: topicId, postId: postId);
+    yield data;
   }
 
 }

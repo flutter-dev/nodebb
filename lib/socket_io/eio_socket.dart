@@ -273,7 +273,7 @@ class EngineIOSocket  {
   }
 
   onHandshake(EngineIOPacket packet) {
-    Map<String, String> data = JSON.decode(packet.data);
+    Map<String, dynamic> data = json.decode(packet.data);
     sid = data['sid'];
     pingInterval = new Duration(milliseconds: utils.convertToInteger(data['pingInterval']));
     pingTimeout = new Duration(milliseconds:  utils.convertToInteger(data['pingTimeout']));

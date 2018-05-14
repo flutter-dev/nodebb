@@ -38,8 +38,8 @@ abstract class Post extends Object with Reactive {
       user: new User.fromJson(map['user']),
       downVotes: map['downvotes'] ?? 0,
       upVotes: map['upvotes'] ?? 0,
-      upVoted: map['upvoted'] ?? 0,
-      downVoted: map['downvoted'] ?? 0,
+      upVoted: map['upvoted'] ?? false,
+      downVoted: map['downvoted'] ?? false,
       votes: map['votes'] ?? 0,
       timestamp: new DateTime.fromMillisecondsSinceEpoch(map['timestamp'])
     );

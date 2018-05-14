@@ -208,3 +208,14 @@ class UpdateNotificationMutation extends BaseMutation {
   }
 
 }
+
+//class AddNewPostToTopicMutation extends BaseMutation {
+//  Post post;
+//
+//  AddNewPostToTopicMutation({this.post});
+//
+//  @override
+//  exec() {
+//    $store.state.topics[this.post.tid].
+//  }
+//}

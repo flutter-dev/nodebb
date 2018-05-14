@@ -9,6 +9,7 @@ import 'package:nodebb/mutations/mutations.dart';
 import 'package:nodebb/services/io_service.dart';
 import 'package:nodebb/utils/utils.dart' as utils;
 import 'package:nodebb/views/chat_page.dart';
+import 'package:nodebb/views/comment_page.dart';
 import 'package:nodebb/views/home_page.dart';
 import 'package:nodebb/views/login_page.dart';
 import 'package:nodebb/views/register_page.dart';
@@ -36,7 +37,7 @@ class App extends StatefulWidget {
 
 class _AppState extends State<App> with WidgetsBindingObserver {
 
-  final Map _routes = {};
+  final Map _routes = <String, dynamic>{};
 
   Store<AppState> store = new Store<AppState>(state: new AppState(
       unreadInfo: new UnreadInfo(),
@@ -60,7 +61,7 @@ class _AppState extends State<App> with WidgetsBindingObserver {
     Application.setup();
 
     Future.wait([
-      store.dispatch(new FetchTopicsAction()),
+      store.dispatch(new FetchTopicsAction(start: 0, count: 19)),
       store.dispatch(new LoginAction('tain335', 'haha12345'))
     ]).catchError((err) {
       print(err);
@@ -157,7 +158,7 @@ class _AppState extends State<App> with WidgetsBindingObserver {
     _addRoute('/topic/:tid', (Map<String, String> params) {
       return new MaterialPageRoute(builder: (BuildContext context) {
         return new TopicDetailPage(routeParams: params);
-      }, maintainState: false);
+      }, maintainState: true);
     });
 
     _addRoute('/login', (Map<String, String> params) {
@@ -177,6 +178,12 @@ class _AppState extends State<App> with WidgetsBindingObserver {
         return new ChatPage(routeParams: params);
       }, maintainState: false);
     });
+
+    _addRoute('/comment/:tid', (Map<String, String> params) {
+      return new MaterialPageRoute(builder: (BuildContext context) {
+        return new CommentPage(routeParams: params);
+      }, maintainState: false);
+    });
   }
 
   void _addRoute(path, routeBuilder) {
@@ -186,7 +193,7 @@ class _AppState extends State<App> with WidgetsBindingObserver {
     _routes[path] = routeBuilder;
   }
 
-  Route<Null> _generateRoute(RouteSettings settings) {
+  Route _generateRoute(RouteSettings settings) {
     if(!hasSetupRoutes) {
       _setupRoutes();
       hasSetupRoutes = true;
@@ -207,7 +214,7 @@ class _AppState extends State<App> with WidgetsBindingObserver {
       store: store,
       child: new MaterialApp(
         title: APP_TITLE,
-        theme: new ThemeData.light(),
+        theme: new ThemeData(platform: TargetPlatform.android, primaryColor: utils.parseColorFromStr('#333333')),
         initialRoute: '/',
         onGenerateRoute: _generateRoute,
       )
