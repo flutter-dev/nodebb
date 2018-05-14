@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:nodebb/errors/errors.dart';
 import 'package:nodebb/models/models.dart';
 import 'package:nodebb/models/room.dart';
 import 'package:nodebb/socket_io/socket_io.dart';
@@ -186,7 +187,7 @@ class IOService {
    return completer.future;
  }
 
- Future<Map> getRecentChat({int uid, int after = 0}) {
+ Future<dynamic> getRecentChat({int uid, int after = 0}) {
    Completer completer = new Completer();
    getSocket().send(packet(data: ["modules.chats.getRecentChats",{"uid": uid,"after": after}]), (SocketIOPacket packet) {
      try {
@@ -264,7 +265,27 @@ class IOService {
    return completer.future;
  }
 
+ Future bookmark({int topicId, int postId}) {
+   Completer completer = new Completer();
+   getSocket().send(packet(data: ["posts.bookmark", {"pid": postId, "room_id": "room_$topicId"}]), (SocketIOPacket packet) {
+     try {
+        if(packet.data[0] is Map && packet.data[0]['message'] != null) {
+          var reason = packet.data[0]['message'];
+          if(reason == '[[error:already-bookmarked]]') {
+            throw new NodeBBBookmarkedException(reason);
+          } else {
+            throw new NodeBBException(reason);
+          }
+        }
+        var data = packet.data[1];
+        completer.complete(data);
+     } catch(err) {
+        completer.completeError(err);
+     }
+   });
+   return completer.future;
+ }
+
  //422["user.setCategorySort","newest_to_oldest"]
-  //Future setCate
 
 }

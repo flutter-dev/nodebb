@@ -2,7 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_wills/flutter_wills.dart';
+import 'package:nodebb/actions/actions.dart';
 import 'package:nodebb/enums/enums.dart';
+import 'package:nodebb/errors/errors.dart';
 import 'package:nodebb/models/models.dart';
 import 'package:nodebb/services/io_service.dart';
 import 'package:nodebb/services/remote_service.dart';
@@ -33,10 +35,21 @@ class _TopicDetailState extends BaseReactiveState<TopicDetailPage> {
   void initState() {
     super.initState();
     tid = utils.convertToInteger(widget.routeParams['tid']);
-    fetchContent();
+    _fetchContent();
   }
 
-  void fetchContent() {
+
+  @override
+  void didUpdateWidget(TopicDetailPage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    int newTid = utils.convertToInteger(widget.routeParams['tid']);
+    if(tid != newTid) {
+      tid = newTid;
+      _fetchContent();
+    }
+  }
+
+  void _fetchContent() {
     status.self = RequestStatus.PENDING;
     RemoteService.getInstance().fetchTopicDetail(tid).then((Map data) {
       List postsFromData = data['posts'] ?? [];
@@ -72,7 +85,7 @@ class _TopicDetailState extends BaseReactiveState<TopicDetailPage> {
                 var state = context.ancestorStateOfType(
                         const TypeMatcher<_TopicDetailState>())
                     as _TopicDetailState;
-                state.fetchContent();
+                state?._fetchContent();
               },
               child: new Text('重试'),
             )
@@ -176,7 +189,28 @@ class _TopicContentState extends BaseReactiveState<TopicContent> {
             new Expanded(
               child: new Align(
                 child: new MaterialButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    $checkLogin().then((_) {
+                      $store.dispatch(new DoBookmarkAction(topicId: post.tid, postId: post.pid)).then((_) {
+                        Scaffold.of(context).showSnackBar(new SnackBar(
+                          content: new Text('收藏成功！'),
+                          backgroundColor: Colors.green,
+                        ));
+                      }).catchError((err) {
+                        if(err is NodeBBBookmarkedException) {
+                          Scaffold.of(context).showSnackBar(new SnackBar(
+                            content: new Text('提示：你已收藏过该文章'),
+                            backgroundColor: Colors.blue,
+                          ));
+                        } else {
+                          Scaffold.of(context).showSnackBar(new SnackBar(
+                            content: new Text('收藏失败！请重新尝试'),
+                            backgroundColor: Colors.red,
+                          ));
+                        }
+                      });
+                    });
+                  },
                   color: Colors.green,
                   child: new Text('收藏', style: new TextStyle(fontSize: 24.0, color: Colors.white))
                 )
@@ -187,17 +221,22 @@ class _TopicContentState extends BaseReactiveState<TopicContent> {
                 child: new MaterialButton(
                   onPressed: () {
                     if($store.state.activeUser == null) {
-                      $confirm('留言需要先登录~', onConfirm: () {
+                      $confirm('评论需要先登录~', onConfirm: () {
                         new Timer(const Duration(milliseconds: 300), () {
                           Navigator.of(context).pushNamed('/login');
                         });
                       }, onConfirmBtnTxt: '登录');
                     } else {
-
+                      Navigator.of(context).pushNamed('/comment/${post.tid}').then((post) {
+                        if(post is Post) {
+                          $store.state.topics[post.tid].postCount++; //todo use mutation
+                          widget.posts.add(post);
+                        }
+                      });
                     }
                   },
                   color: Colors.blue,
-                  child: new Text('留言', style: new TextStyle(fontSize: 24.0, color: Colors.white))
+                  child: new Text('回复', style: new TextStyle(fontSize: 24.0, color: Colors.white))
                 )
               )
             ),

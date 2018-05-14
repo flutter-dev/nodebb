@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_wills/flutter_wills.dart';
 import 'package:nodebb/actions/actions.dart';
 import 'package:nodebb/models/models.dart';
-import 'package:nodebb/mutations/mutations.dart';
 import 'package:nodebb/views/base.dart';
 import 'package:nodebb/widgets/widgets.dart';
 
@@ -37,6 +36,10 @@ class TopicList extends BaseReactiveWidget {
 
 class _TopicListState extends BaseReactiveState<TopicList> {
 
+  bool isLoadingMore = false;
+
+  bool isCannotLoadMore = true;
+
   @override
   void initState() {
     super.initState();
@@ -46,9 +49,47 @@ class _TopicListState extends BaseReactiveState<TopicList> {
   Widget render(BuildContext context) {
     return new RefreshIndicator(
       child: new ListView.builder(
-        itemCount: $store.state.topics.values.length,
+        itemCount: $store.state.topics.values.length + 1,
         itemBuilder: (BuildContext context, int index) {
-          if(index >= $store.state.topics.values.length) return null;
+          if(isCannotLoadMore && !isLoadingMore && $store.state.topics.values.length - index <= 10) {
+            isLoadingMore = true;
+            int oldListLength = $store.state.topics.values.length;
+            $store.dispatch(new FetchTopicsAction(start: oldListLength, count: 19, clearBefore: false)).then((_) {
+                if($store.state.topics.values.length - oldListLength < 20) {
+                  isCannotLoadMore = false;
+                }
+            }).whenComplete(() {
+              isLoadingMore = false;
+              setState(() {});
+            });
+          }
+          if(index == $store.state.topics.values.length) {
+            if(isCannotLoadMore) {
+              return new Container(
+                height: 64.0,
+                child: new Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    new Text('加载中...')
+                  ],
+                )
+              );
+            } else {
+              return new Container(
+                  height: 64.0,
+                  child: new Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      new Text('# end #')
+                    ],
+                  )
+              );
+            }
+          } else if(index > $store.state.topics.values.length) {
+            return null;
+          }
           Topic topic = $store.state.topics.values.toList()[index];
           User user = topic.user;
           return new ListTile(
@@ -69,7 +110,7 @@ class _TopicListState extends BaseReactiveState<TopicList> {
       onRefresh: () async {
         await $store.dispatch(new FetchTopicsAction(start: 0, count: 20, clearBefore: true));
         //$store.state.notification.newTopic
-        $store.commit(new UpdateNotificationMutation(newTopic: false));
+        //$store.commit(new UpdateNotificationMutation(newTopic: false));
       }
     );
   }

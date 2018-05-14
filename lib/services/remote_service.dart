@@ -73,7 +73,7 @@ class RemoteService {
     }
   }
 
-  Future<Map> fetchTopics([int start = 0, int count = 20]) async {
+  Future<Map> fetchTopics([int start = 0, int count = 9]) async {
     var params = <String, String>{'after': start.toString(), 'count': count.toString()};
     Response res = await get(_buildUrl('/api/mobile/v1/topics', params));
     return utils.decodeJSON(res.body);

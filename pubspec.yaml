@@ -8,7 +8,7 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: 0.1.0
-  flutter_markdown: 0.1.1
+  flutter_markdown: 0.1.5
   flutter_wills:
     path: '../flutter_wills'
 
@@ -17,7 +17,7 @@ dev_dependencies:
     sdk: flutter
   build_runner: 0.6.0
   source_gen: 0.7.4+3
-  quiver: '>=0.21.0 <0.29.0'
+  quiver: '0.29.0+1'
   flutter_wills_gen:
     path: '../flutter_wills_gen'
 

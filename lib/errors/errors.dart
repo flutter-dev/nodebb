@@ -17,3 +17,15 @@ class NodeBBLoginFailException extends _BaseException {
 class NodeBBServiceNotAvailableException extends _BaseException {
   const NodeBBServiceNotAvailableException([reason]): super(reason);
 }
+
+class NodeBBException extends _BaseException {
+  const NodeBBException([reason]): super(reason);
+}
+
+class NodeBBBookmarkedException extends _BaseException {
+  const NodeBBBookmarkedException([reason]): super(reason);
+}
+
+class ApplicationException extends _BaseException {
+  const ApplicationException([reason]): super(reason);
+}

@@ -31,7 +31,7 @@ String encodeUriQuery(Map<String, String> query) {
 
 //https://github.com/dartist/express/blob/master/lib/utils.dart
 Map<String,String> pathMatcher(String routePath, String matchesPath){
-  Map params = {};
+  Map params = <String, String>{};
   if (routePath == matchesPath) return params;
   List<String> pathComponents = matchesPath.split("/");
   List<String> routeComponents = routePath.split("/");
@@ -76,7 +76,7 @@ Map decodeJSON(String data) {
   if(data.length == 0) return {};
   var json;
   try {
-    json = JSON.decode(data);
+    json = jsonDecode(data);
   } catch(e) {
    json = handleNodeBBResponse(data);
    if(json == null) {
