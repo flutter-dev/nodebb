@@ -1,5 +1,5 @@
 name: nodebb
-description: A new Flutter project.
+description: Flutter Dev Forum Flutter Client
 
 dependencies:
   flutter:
@@ -15,6 +15,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  shared_preferences: 0.4.1
   build_runner: 0.6.0
   source_gen: 0.7.4+3
   quiver: '0.29.0+1'

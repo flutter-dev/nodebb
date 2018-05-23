@@ -4,6 +4,7 @@ import 'package:nodebb/actions/actions.dart';
 import 'package:nodebb/models/models.dart';
 import 'package:nodebb/views/base.dart';
 import 'package:nodebb/widgets/widgets.dart';
+import 'package:nodebb/mutations/mutations.dart';
 
 class TopicsFragment extends StatefulWidget {
   TopicsFragment({Key key}): super(key: key);
@@ -95,13 +96,17 @@ class _TopicListState extends BaseReactiveState<TopicList> {
           return new ListTile(
             key: new ValueKey<int>(topic.tid),
             leading: new SizedBox(
-              width: 40.0,
-              height: 40.0,
+              width: 56.0,
+              height: 56.0,
               child: new NodeBBAvatar(picture: user?.picture, iconText: user.iconText, iconBgColor: user.iconBgColor)
             ),
-            title: new Text(topic.title),
+            title: new Container(
+              padding: const EdgeInsets.only(bottom: 4.0),
+              child: new Text(topic.title),
+            ),
             subtitle: new Text('${topic.viewCount} 浏览 · ${topic.postCount - 1} 回复'),
             onTap: () {
+              $store.commit(new AddRecentViewTopic(topic.tid));
               Navigator.of(context).pushNamed('/topic/${topic.tid}');
             },
           );

@@ -32,5 +32,6 @@ class Application {
 
   static final Logger logger = new Logger('Application');
 
-  static final host = '172.18.4.19:4567';
+//  static final host = '172.18.4.19:4567';
+  static final host = 'flutter-dev.com';
 }

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_wills/flutter_wills.dart';
@@ -8,13 +9,18 @@ import 'package:nodebb/application/application.dart';
 import 'package:nodebb/mutations/mutations.dart';
 import 'package:nodebb/services/io_service.dart';
 import 'package:nodebb/utils/utils.dart' as utils;
+import 'package:nodebb/views/bookmarks_page.dart';
 import 'package:nodebb/views/chat_page.dart';
 import 'package:nodebb/views/comment_page.dart';
 import 'package:nodebb/views/home_page.dart';
 import 'package:nodebb/views/login_page.dart';
+import 'package:nodebb/views/recent_views_page.dart';
 import 'package:nodebb/views/register_page.dart';
+import 'package:nodebb/views/search_user_page.dart';
 import 'package:nodebb/views/topic_detail_page.dart';
 import 'package:nodebb/models/models.dart';
+import 'package:nodebb/views/user_info_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 const APP_TITLE = 'Flutter Dev';
 
@@ -39,13 +45,17 @@ class _AppState extends State<App> with WidgetsBindingObserver {
 
   final Map _routes = <String, dynamic>{};
 
+  var unWatchRecentViews;
+
   Store<AppState> store = new Store<AppState>(state: new AppState(
       unreadInfo: new UnreadInfo(),
       notification: new NodeBBNotification(),
       topics: new ObservableMap.linked(),
       categories: new ObservableMap.linked(),
       users: new ObservableMap.linked(),
-      rooms: new ObservableMap.linked()
+      rooms: new ObservableMap.linked(),
+      shareStorage: ObservableMap.linked(),
+      recentViews: new ObservableList<int>()
   ));
 
   bool hasSetupRoutes = false;
@@ -62,14 +72,18 @@ class _AppState extends State<App> with WidgetsBindingObserver {
 
     Future.wait([
       store.dispatch(new FetchTopicsAction(start: 0, count: 19)),
-      store.dispatch(new LoginAction('tain335', 'haha12345'))
+      //store.dispatch(new LoginAction('tain335', 'haha12345'))
     ]).catchError((err) {
       print(err);
     });
 
+    loadDefaultUser();
+
     willsWatch(()=> store.state.activeUser, () {
       resetIOService();
+      loadRecentViews();
     });
+
   }
 
 
@@ -84,6 +98,30 @@ class _AppState extends State<App> with WidgetsBindingObserver {
       default:
         break;
     }
+  }
+
+  void loadDefaultUser() {
+    SharedPreferences.getInstance().then((prefs) {
+      var username = prefs.get('username');
+      var password = prefs.get('password');
+      if(!utils.isEmpty(username) && !utils.isEmpty(password)) {
+        store.dispatch(new LoginAction(username, password));
+      }
+    });
+  }
+
+  void loadRecentViews() {
+    SharedPreferences.getInstance().then((prefs) {
+      if(unWatchRecentViews != null) unWatchRecentViews();
+      Map userInfo = jsonDecode(prefs.get('user_${store.state.activeUser?.uid}') ?? '{}');
+      List recentViews = userInfo['recentViews'] ?? [];
+      store.state.recentViews.clear();
+      store.state.recentViews.addAll(recentViews.cast<int>());
+      unWatchRecentViews = willsWatch(()=> store.state.recentViews.length, () {
+        userInfo['recentViews'] = store.state.recentViews.toList();
+        prefs.setString('user_${store.state.activeUser?.uid}', jsonEncode(userInfo));
+      });
+    });
   }
 
   void resetIOService() {
@@ -129,12 +167,16 @@ class _AppState extends State<App> with WidgetsBindingObserver {
           break;
         case NodeBBEventType.RECEIVE_CHATS:
           Map data = event.data;
-          store.commit(new UpdateRoomTeaserContentMutation(
-            utils.convertToInteger(data['roomId']),
-            data['message']['cleanedContent'])
-          );
-          store.commit(new UpdateRoomUnreadStatusMutation(
-              utils.convertToInteger(data['roomId']), true));
+          var roomId = utils.convertToInteger(data['roomId']);
+          if(store.state.rooms[roomId] != null) {
+            store.commit(new UpdateRoomTeaserContentMutation(
+                roomId,
+                data['message']['cleanedContent'])
+            );
+            store.commit(new UpdateRoomUnreadStatusMutation(roomId, true));
+          } else {
+            store.dispatch(new FetchRecentChatAction());
+          }
           break;
         case NodeBBEventType.UPDATE_NOTIFICATION_COUNT:
           break;
@@ -184,6 +226,36 @@ class _AppState extends State<App> with WidgetsBindingObserver {
         return new CommentPage(routeParams: params);
       }, maintainState: false);
     });
+
+    _addRoute('/bookmarks', (Map<String, String> params) {
+      return new MaterialPageRoute(builder: (BuildContext context) {
+        return new BookmarksPage(routeParams: params);
+      }, maintainState: false);
+    });
+
+    _addRoute('/search_user', (Map<String, String> params) {
+      return new MaterialPageRoute(builder: (BuildContext context) {
+        return new SearchUserPage(routeParams: params);
+      });
+    });
+
+    _addRoute('/users/:uid', (Map<String, String> params) {
+      return new MaterialPageRoute(builder: (BuildContext context) {
+        return new UserInfoPage(routeParams: params);
+      });
+    });
+
+    _addRoute('/recent_views', (Map<String, String> params) {
+      return new MaterialPageRoute(builder: (BuildContext context) {
+        return new RecentViewsPage(routeParams: params);
+      });
+    });
+
+//    _addRoute('/about', (Map<String, String> params) {
+//      return new MaterialPageRoute(builder: (BuildContext context) {
+//
+//      });
+//    });
   }
 
   void _addRoute(path, routeBuilder) {

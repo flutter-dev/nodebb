@@ -20,7 +20,7 @@ abstract class Category extends Object with Reactive {
 
   Category.$();
 
-  factory Category.fromJson(Map json) {
+  factory Category.fromJSON(Map json) {
     Category category = new _$Category(
       cid: utils.convertToInteger(json['cid']),
       name: json['name'],

@@ -17,11 +17,11 @@ class Teaser extends Object with Reactive {
 
   Teaser.$();
 
-  factory Teaser.fromJson(Map json) {
+  factory Teaser.fromJSON(Map json) {
     Teaser teaser = new _$Teaser(
-      fromUser: new User.fromJson(json['user']),
-      content: json['content'],
-      timestamp: json['timestamp']
+      fromUser: json['user'] != null ? new User.fromJSON(json['user']) : null,
+      content: json['content'] ?? '',
+      timestamp: json['timestamp'] ?? 0
     );
     return teaser;
   }

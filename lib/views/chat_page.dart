@@ -7,6 +7,7 @@ import 'package:nodebb/mutations/mutations.dart';
 import 'package:nodebb/services/io_service.dart';
 import 'package:nodebb/views/base.dart';
 import 'package:nodebb/widgets/widgets.dart';
+import 'package:nodebb/errors/errors.dart';
 import 'package:nodebb/utils/utils.dart' as utils;
 
 class ChatPage extends BaseReactivePage {
@@ -36,6 +37,12 @@ class _RegisterPageState extends BaseReactiveState<ChatPage> {
     IOService.getInstance().sendMessage(roomId: room.roomId, content: content).then((Message message) {
       msg.id = message.id;
       msg.type = MessageType.SEND;
+    }).catchError((err) {
+      if(err is NodeBBNoUserInRoomException) {
+        Scaffold.of(context).showSnackBar(new SnackBar(content: new Text('房间没有用户！'), backgroundColor: Colors.red,));
+      } else {
+        Scaffold.of(context).showSnackBar(new SnackBar(content: new Text('未知错误，请重试！'), backgroundColor: Colors.red,));
+      }
     });
     room.messages.insert(0, msg);
     //FocusScope.of(context).requestFocus(new FocusNode()); //收起键盘
@@ -70,7 +77,7 @@ class _RegisterPageState extends BaseReactiveState<ChatPage> {
         Map data = event.data;
         if(utils.convertToInteger(data['roomId']) == room.roomId
          && data['fromUid'] != $store.state.activeUser.uid) {
-          room.messages.insert(0, new Message.fromJson(data['message']));
+          room.messages.insert(0, new Message.fromJSON(data['message']));
           event.ack();
         }
         if(utils.convertToInteger(data['roomId']) == room.roomId) {
@@ -149,9 +156,9 @@ class _RegisterPageState extends BaseReactiveState<ChatPage> {
 
   @override
   void dispose() {
-    super.dispose();
     chatSub?.cancel();
     SystemChannels.textInput.invokeMethod('TextInput.hide');
+    super.dispose();
     //FocusScope.of(context).requestFocus(new FocusNode());
   }
 

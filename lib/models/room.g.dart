@@ -10,12 +10,11 @@ class _$Room extends Room {
   int _owner;
   int get owner {
     $observe('owner');
-    _owner = _owner ?? 0;
     return _owner;
   }
 
   set owner(int owner) {
-    if (owner != null && owner == _owner) return;
+    if (owner == _owner) return;
     _owner = owner;
     $notify('owner');
   }
@@ -23,12 +22,11 @@ class _$Room extends Room {
   int _roomId;
   int get roomId {
     $observe('roomId');
-    _roomId = _roomId ?? 0;
     return _roomId;
   }
 
   set roomId(int roomId) {
-    if (roomId != null && roomId == _roomId) return;
+    if (roomId == _roomId) return;
     _roomId = roomId;
     $notify('roomId');
   }
@@ -36,12 +34,11 @@ class _$Room extends Room {
   String _roomName;
   String get roomName {
     $observe('roomName');
-    _roomName = _roomName ?? '';
     return _roomName;
   }
 
   set roomName(String roomName) {
-    if (roomName != null && roomName == _roomName) return;
+    if (roomName == _roomName) return;
     _roomName = roomName;
     $notify('roomName');
   }
@@ -49,12 +46,11 @@ class _$Room extends Room {
   ObservableList<User> _users;
   ObservableList<User> get users {
     $observe('users');
-
     return _users;
   }
 
   set users(ObservableList<User> users) {
-    if (users != null && users == _users) return;
+    if (users == _users) return;
     _users = users;
     $notify('users');
   }
@@ -62,12 +58,11 @@ class _$Room extends Room {
   bool _groupChat;
   bool get groupChat {
     $observe('groupChat');
-    _groupChat = _groupChat ?? false;
     return _groupChat;
   }
 
   set groupChat(bool groupChat) {
-    if (groupChat != null && groupChat == _groupChat) return;
+    if (groupChat == _groupChat) return;
     _groupChat = groupChat;
     $notify('groupChat');
   }
@@ -75,12 +70,11 @@ class _$Room extends Room {
   bool _unread;
   bool get unread {
     $observe('unread');
-    _unread = _unread ?? false;
     return _unread;
   }
 
   set unread(bool unread) {
-    if (unread != null && unread == _unread) return;
+    if (unread == _unread) return;
     _unread = unread;
     $notify('unread');
   }
@@ -88,12 +82,11 @@ class _$Room extends Room {
   String _ownerName;
   String get ownerName {
     $observe('ownerName');
-    _ownerName = _ownerName ?? '';
     return _ownerName;
   }
 
   set ownerName(String ownerName) {
-    if (ownerName != null && ownerName == _ownerName) return;
+    if (ownerName == _ownerName) return;
     _ownerName = ownerName;
     $notify('ownerName');
   }
@@ -101,12 +94,11 @@ class _$Room extends Room {
   Teaser _teaser;
   Teaser get teaser {
     $observe('teaser');
-
     return _teaser;
   }
 
   set teaser(Teaser teaser) {
-    if (teaser != null && teaser == _teaser) return;
+    if (teaser == _teaser) return;
     _teaser = teaser;
     $notify('teaser');
   }
@@ -114,13 +106,11 @@ class _$Room extends Room {
   int _maxChatMessageLength;
   int get maxChatMessageLength {
     $observe('maxChatMessageLength');
-    _maxChatMessageLength = _maxChatMessageLength ?? 0;
     return _maxChatMessageLength;
   }
 
   set maxChatMessageLength(int maxChatMessageLength) {
-    if (maxChatMessageLength != null &&
-        maxChatMessageLength == _maxChatMessageLength) return;
+    if (maxChatMessageLength == _maxChatMessageLength) return;
     _maxChatMessageLength = maxChatMessageLength;
     $notify('maxChatMessageLength');
   }
@@ -128,39 +118,38 @@ class _$Room extends Room {
   ObservableList<Message> _messages;
   ObservableList<Message> get messages {
     $observe('messages');
-
     return _messages;
   }
 
   set messages(ObservableList<Message> messages) {
-    if (messages != null && messages == _messages) return;
+    if (messages == _messages) return;
     _messages = messages;
     $notify('messages');
   }
 
   _$Room.$() : super.$();
   factory _$Room({
-    int owner: 0,
-    int roomId: 0,
-    String roomName: '',
+    int owner,
+    int roomId,
+    String roomName,
     ObservableList<User> users,
-    bool groupChat: false,
-    bool unread: false,
-    String ownerName: '',
+    bool groupChat,
+    bool unread,
+    String ownerName,
     Teaser teaser,
-    int maxChatMessageLength: 0,
+    int maxChatMessageLength,
     ObservableList<Message> messages,
   }) {
     return new _$Room.$()
-      .._owner = owner
-      .._roomId = roomId
-      .._roomName = roomName
+      .._owner = owner ?? 0
+      .._roomId = roomId ?? 0
+      .._roomName = roomName ?? ''
       .._users = users
-      .._groupChat = groupChat
-      .._unread = unread
-      .._ownerName = ownerName
+      .._groupChat = groupChat ?? false
+      .._unread = unread ?? false
+      .._ownerName = ownerName ?? ''
       .._teaser = teaser
-      .._maxChatMessageLength = maxChatMessageLength
+      .._maxChatMessageLength = maxChatMessageLength ?? 0
       .._messages = messages;
   }
 }

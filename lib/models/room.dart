@@ -33,11 +33,11 @@ class Room extends Object with Reactive {
 
   Room.$();
 
-  factory Room.fromJson(Map json) {
+  factory Room.fromJSON(Map json) {
     List datas = json['users'];
     ObservableList<User> users = new ObservableList();
     for(var data in datas) {
-      users.add(new User.fromJson(data));
+      users.add(new User.fromJSON(data));
     }
     Room room = new _$Room(
       owner: json['owner'],
@@ -48,7 +48,7 @@ class Room extends Object with Reactive {
       unread: json['unread'],
       users: users,
       maxChatMessageLength: json['maximumChatMessageLength'] ?? 1000,
-      teaser: new Teaser.fromJson(json['teaser']),
+      teaser: json['teaser'] != null ? new Teaser.fromJSON(json['teaser']) : new Teaser.fromJSON({}),
       messages: new ObservableList()
     );
     return room;

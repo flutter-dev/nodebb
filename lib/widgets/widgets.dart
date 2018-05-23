@@ -6,6 +6,7 @@ import 'package:nodebb/application/application.dart';
 import 'package:nodebb/models/models.dart';
 import 'package:nodebb/utils/utils.dart' as utils;
 import 'package:nodebb/views/base.dart';
+import 'package:nodebb/widgets/builders.dart';
 
 class NodeBBAvatar extends StatelessWidget {
 
@@ -22,11 +23,17 @@ class NodeBBAvatar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var children = <Widget>[];
-    children.add(new CircleAvatar(
-      child: !utils.isEmpty(picture) ? null : new Text(iconText),
-      backgroundColor: utils.parseColorFromStr(iconBgColor),
-      backgroundImage: utils.isEmpty(picture) ? null : new NetworkImage('http://${Application.host}$picture'),
-    ));
+    children.add(
+      new FittedBox(
+        fit: BoxFit.contain,
+        child: new CircleAvatar(
+          child: !utils.isEmpty(picture) ? null : new Text(iconText),
+          backgroundColor: utils.parseColorFromStr(iconBgColor),
+          foregroundColor: Colors.white,
+          backgroundImage: utils.isEmpty(picture) ? null : new NetworkImage('http://${Application.host}$picture'),
+        )
+      )
+    );
     if(marked) {
       children.add(new Positioned(
         right: 0.0,
@@ -40,6 +47,7 @@ class NodeBBAvatar extends StatelessWidget {
     }
     return new Stack(
       fit: StackFit.expand,
+      alignment: AlignmentDirectional.center,
       overflow: Overflow.visible,
       children: children,
     );
@@ -95,6 +103,7 @@ class _MessageWidgetState extends BaseReactiveState<MessageWidget> {
                           ),
                           child: new Text(
                             widget.message.content.replaceAll(RegExp(r'\n$'), ''),
+                            style: const TextStyle(height: 1.4),
                           ),
                         ),
                       )
@@ -128,6 +137,7 @@ class _MessageWidgetState extends BaseReactiveState<MessageWidget> {
                             widget.message.type == MessageType.SEND_PENDING ?
                               '[待确认]' +  widget.message.content.replaceAll(RegExp(r'\n$'), '') :
                               widget.message.content.replaceAll(RegExp(r'\n$'), ''),
+                            style: const TextStyle(height: 1.4),
                             textAlign: TextAlign.left,
                           ),
                         ),
@@ -180,6 +190,97 @@ class Markdown extends MarkdownWidget {
   @override
   Widget build(BuildContext context, List<Widget> children) {
     return new ListView(padding: padding, children: <Widget>[]..addAll(children)..addAll(additionalChildren));
+  }
+}
+
+class TopicsSummaryItem extends StatelessWidget {
+
+  final Topic topic;
+
+  final Post post;
+
+  final onTap;
+
+  final onLongPress;
+
+  TapDownDetails _details;
+
+  TopicsSummaryItem({this.topic, this.post, this.onTap, this.onLongPress});
+
+  _getSummary(content) {
+    var lines = post.content.replaceAll('\r\n', '\n').split('\n');
+    var content;
+    if(lines.length > 2) {
+      content = lines.sublist(0, 2).join('\n');
+    } else {
+      content = lines.join('');
+    }
+    return content;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return new InkWell(
+      onTap: this.onTap,
+      onTapDown: (TapDownDetails details) {
+        _details = details;
+      },
+      onLongPress: () {
+        this.onLongPress(context, _details);
+      },
+      child: new Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        child: new Container(
+          padding: const EdgeInsets.symmetric(vertical: 24.0),
+          child: new Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              new Text('${topic.title}', overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 20.0)),
+              new Padding(padding: const EdgeInsets.only(top: 12.0)),
+              new Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  new Container(
+                    child: new Text('${post.votes}',
+                      style: new TextStyle(
+                        fontSize: 18.0,
+                        color: Colors.white
+                      )
+                    ),
+                    alignment: Alignment.center,
+                    width: 48.0,
+                    height: 48.0,
+                    decoration: new BoxDecoration(color: Colors.blue, borderRadius: new BorderRadius.circular(24.0)),
+                    margin: const EdgeInsets.only(right: 8.0),
+                  ),
+                  new Flexible(
+                    child: new Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        new Text('${topic.user.userName}', overflow: TextOverflow.ellipsis, style: const TextStyle(color: Colors.grey),),
+                        new Padding(padding: const EdgeInsets.only(top: 8.0)),
+                        new MarkdownBody(data: _getSummary(post.content))
+                      ],
+                    )
+                  )
+                ],
+              ),
+            ],
+          ),
+          decoration: buildBottomDividerDecoration(context),
+        )
+
+      )
+    );
+  }
+}
+
+class CustomScrollBehavior extends ScrollBehavior {
+
+  @override
+  Widget buildViewportChrome(BuildContext context, Widget child,
+      AxisDirection axisDirection) {
+    return child;
   }
 }
 

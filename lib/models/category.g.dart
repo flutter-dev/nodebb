@@ -10,12 +10,11 @@ class _$Category extends Category {
   int _cid;
   int get cid {
     $observe('cid');
-    _cid = _cid ?? 0;
     return _cid;
   }
 
   set cid(int cid) {
-    if (cid != null && cid == _cid) return;
+    if (cid == _cid) return;
     _cid = cid;
     $notify('cid');
   }
@@ -23,12 +22,11 @@ class _$Category extends Category {
   String _name;
   String get name {
     $observe('name');
-    _name = _name ?? '';
     return _name;
   }
 
   set name(String name) {
-    if (name != null && name == _name) return;
+    if (name == _name) return;
     _name = name;
     $notify('name');
   }
@@ -36,12 +34,11 @@ class _$Category extends Category {
   String _bgColor;
   String get bgColor {
     $observe('bgColor');
-    _bgColor = _bgColor ?? '';
     return _bgColor;
   }
 
   set bgColor(String bgColor) {
-    if (bgColor != null && bgColor == _bgColor) return;
+    if (bgColor == _bgColor) return;
     _bgColor = bgColor;
     $notify('bgColor');
   }
@@ -49,12 +46,11 @@ class _$Category extends Category {
   String _color;
   String get color {
     $observe('color');
-    _color = _color ?? '';
     return _color;
   }
 
   set color(String color) {
-    if (color != null && color == _color) return;
+    if (color == _color) return;
     _color = color;
     $notify('color');
   }
@@ -62,29 +58,28 @@ class _$Category extends Category {
   String _image;
   String get image {
     $observe('image');
-    _image = _image ?? '';
     return _image;
   }
 
   set image(String image) {
-    if (image != null && image == _image) return;
+    if (image == _image) return;
     _image = image;
     $notify('image');
   }
 
   _$Category.$() : super.$();
   factory _$Category({
-    int cid: 0,
-    String name: '',
-    String bgColor: '',
-    String color: '',
-    String image: '',
+    int cid,
+    String name,
+    String bgColor,
+    String color,
+    String image,
   }) {
     return new _$Category.$()
-      .._cid = cid
-      .._name = name
-      .._bgColor = bgColor
-      .._color = color
-      .._image = image;
+      .._cid = cid ?? 0
+      .._name = name ?? ''
+      .._bgColor = bgColor ?? ''
+      .._color = color ?? ''
+      .._image = image ?? '';
   }
 }

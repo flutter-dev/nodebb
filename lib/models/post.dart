@@ -24,24 +24,27 @@ abstract class Post extends Object with Reactive {
 
   int votes; //赞总数
 
+  bool isMainPost;
+
   DateTime timestamp;
 
   String content; //内容
 
   Post.$();
 
-  factory Post.fromMap(Map map) {
+  factory Post.fromJSON(Map json) {
     Post post = new _$Post(
-      content: map['content'],
-      tid: utils.convertToInteger(map['tid']),
-      pid: utils.convertToInteger(map['pid']),
-      user: new User.fromJson(map['user']),
-      downVotes: map['downvotes'] ?? 0,
-      upVotes: map['upvotes'] ?? 0,
-      upVoted: map['upvoted'] ?? false,
-      downVoted: map['downvoted'] ?? false,
-      votes: map['votes'] ?? 0,
-      timestamp: new DateTime.fromMillisecondsSinceEpoch(map['timestamp'])
+      content: json['content'],
+      tid: utils.convertToInteger(json['tid']),
+      pid: utils.convertToInteger(json['pid']),
+      user: json['user'] != null ? new User.fromJSON(json['user']) : null,
+      downVotes: json['downvotes'] ?? 0,
+      upVotes: json['upvotes'] ?? 0,
+      upVoted: json['upvoted'] ?? false,
+      downVoted: json['downvoted'] ?? false,
+      isMainPost: json['isMainPost'] ?? false,
+      votes: json['votes'] ?? 0,
+      timestamp: new DateTime.fromMillisecondsSinceEpoch(json['timestamp'])
     );
     return post;
   }

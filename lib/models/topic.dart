@@ -13,6 +13,8 @@ abstract class Topic extends Object with Reactive {
 
   int tid; //Topic ID
 
+  int mainPid;
+
   User user;
 
   bool isOwner;
@@ -35,20 +37,21 @@ abstract class Topic extends Object with Reactive {
 
   Topic.$();
 
-  factory Topic.fromJson(Map json) {
+  factory Topic.fromJSON(Map json) {
     Topic topic = new  _$Topic(
       tid: utils.convertToInteger(json['tid']),
       isOwner: json['isOwner'],
       cid: utils.convertToInteger(json['cid']),
-      lastPostTime: new DateTime.fromMicrosecondsSinceEpoch(json['lastposttime']),
+      mainPid: utils.convertToInteger(json['mainPid']),
+      lastPostTime: new DateTime.fromMillisecondsSinceEpoch(json['lastposttime']),
       downVotes: json['downvotes'],
       upVotes: json['upvotes'],
-      timestamp: new DateTime.fromMicrosecondsSinceEpoch(json['timestamp']),
+      timestamp: new DateTime.fromMillisecondsSinceEpoch(json['timestamp']),
       postCount: json['postcount'],
       viewCount: json['viewcount'],
       title: json['title'],
       //uid: utils.convertToInteger(json['uid'])
-      user: new User.fromJson(json['user'])
+      user: new User.fromJSON(json['user'])
     );
     return topic;
   }

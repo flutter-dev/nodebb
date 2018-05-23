@@ -72,7 +72,7 @@ _throwException(reason) {
   }
 }
 
-Map decodeJSON(String data) {
+dynamic decodeJSON(String data) {
   if(data.length == 0) return {};
   var json;
   try {
@@ -82,7 +82,7 @@ Map decodeJSON(String data) {
    if(json == null) {
      throw e;
    }
-   if(json['error'] != null) {
+   if(json is Map && json['error'] != null) {
      _throwException(json['error']);
    }
   }

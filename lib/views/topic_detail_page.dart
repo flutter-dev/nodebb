@@ -10,6 +10,7 @@ import 'package:nodebb/services/io_service.dart';
 import 'package:nodebb/services/remote_service.dart';
 import 'package:nodebb/utils/utils.dart' as utils;
 import 'package:nodebb/views/base.dart';
+import 'package:nodebb/widgets/builders.dart';
 import 'package:nodebb/widgets/widgets.dart';
 
 class TopicDetailPage extends BaseReactivePage {
@@ -54,7 +55,7 @@ class _TopicDetailState extends BaseReactiveState<TopicDetailPage> {
     RemoteService.getInstance().fetchTopicDetail(tid).then((Map data) {
       List postsFromData = data['posts'] ?? [];
       for (var data in postsFromData) {
-        posts.add(new Post.fromMap(data));
+        posts.add(new Post.fromJSON(data));
       }
       status.self = RequestStatus.SUCCESS;
     }).catchError((err, stacktrace) {
@@ -66,40 +67,16 @@ class _TopicDetailState extends BaseReactiveState<TopicDetailPage> {
 
   @override
   Widget render(BuildContext context) {
-    Widget body;
-    switch (status.self) {
-      case RequestStatus.SUCCESS:
-        body = new TopicContent(posts: posts);
-        break;
-      case RequestStatus.ERROR:
-        body = new Center(
-            child: new Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            new Text('出错了！'),
-            new MaterialButton(
-              color: Colors.blue,
-              textColor: Colors.white,
-              onPressed: () {
-                var state = context.ancestorStateOfType(
-                        const TypeMatcher<_TopicDetailState>())
-                    as _TopicDetailState;
-                state?._fetchContent();
-              },
-              child: new Text('重试'),
-            )
-          ],
-        ));
-        break;
-      default:
-        body = new Center(child: new Text('加载中...'));
-        break;
-    }
     return new Scaffold(
-        appBar:
-            new AppBar(title: new Text('${$store.state.topics[tid].title}')),
-        body: body);
+        appBar: new AppBar(
+            title: new Text('${$store.state.topics[tid].title}')),
+        body: buildPendingBody(status: status.self, bodyBuilder: () {
+          return new TopicContent(posts: posts);
+        }, onRetry: () {
+          //var state = context.ancestorStateOfType(const TypeMatcher<_TopicDetailState>()) as _TopicDetailState;
+          this._fetchContent();
+        })
+    );
   }
 }
 
@@ -220,20 +197,14 @@ class _TopicContentState extends BaseReactiveState<TopicContent> {
               child: new Align(
                 child: new MaterialButton(
                   onPressed: () {
-                    if($store.state.activeUser == null) {
-                      $confirm('评论需要先登录~', onConfirm: () {
-                        new Timer(const Duration(milliseconds: 300), () {
-                          Navigator.of(context).pushNamed('/login');
-                        });
-                      }, onConfirmBtnTxt: '登录');
-                    } else {
+                    $checkLogin().then((_){
                       Navigator.of(context).pushNamed('/comment/${post.tid}').then((post) {
                         if(post is Post) {
                           $store.state.topics[post.tid].postCount++; //todo use mutation
                           widget.posts.add(post);
                         }
                       });
-                    }
+                    });
                   },
                   color: Colors.blue,
                   child: new Text('回复', style: new TextStyle(fontSize: 24.0, color: Colors.white))
@@ -255,7 +226,7 @@ class _TopicContentState extends BaseReactiveState<TopicContent> {
           new Container(
             width: 42.0,
             height: 42.0,
-            margin: const EdgeInsets.only(right: 12.0),
+            margin: const EdgeInsets.only(top: 12.0, right: 12.0),
             alignment: Alignment.topCenter,
             child: new NodeBBAvatar(
               picture: post.user.picture,

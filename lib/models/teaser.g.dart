@@ -10,12 +10,11 @@ class _$Teaser extends Teaser {
   User _fromUser;
   User get fromUser {
     $observe('fromUser');
-
     return _fromUser;
   }
 
   set fromUser(User fromUser) {
-    if (fromUser != null && fromUser == _fromUser) return;
+    if (fromUser == _fromUser) return;
     _fromUser = fromUser;
     $notify('fromUser');
   }
@@ -23,12 +22,11 @@ class _$Teaser extends Teaser {
   String _content;
   String get content {
     $observe('content');
-    _content = _content ?? '';
     return _content;
   }
 
   set content(String content) {
-    if (content != null && content == _content) return;
+    if (content == _content) return;
     _content = content;
     $notify('content');
   }
@@ -36,12 +34,11 @@ class _$Teaser extends Teaser {
   int _timestamp;
   int get timestamp {
     $observe('timestamp');
-    _timestamp = _timestamp ?? 0;
     return _timestamp;
   }
 
   set timestamp(int timestamp) {
-    if (timestamp != null && timestamp == _timestamp) return;
+    if (timestamp == _timestamp) return;
     _timestamp = timestamp;
     $notify('timestamp');
   }
@@ -49,12 +46,12 @@ class _$Teaser extends Teaser {
   _$Teaser.$() : super.$();
   factory _$Teaser({
     User fromUser,
-    String content: '',
-    int timestamp: 0,
+    String content,
+    int timestamp,
   }) {
     return new _$Teaser.$()
       .._fromUser = fromUser
-      .._content = content
-      .._timestamp = timestamp;
+      .._content = content ?? ''
+      .._timestamp = timestamp ?? 0;
   }
 }

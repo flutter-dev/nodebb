@@ -34,7 +34,7 @@ abstract class User extends Object with Reactive {
 
   User.$();
 
-  factory User.fromJson(Map json) {
+  factory User.fromJSON(Map json) {
     User user = new _$User(
       userName: json['username'],
       uid: utils.convertToInteger(json['uid']),
