@@ -27,12 +27,12 @@ class FetchTopicsAction extends BaseRunLastAction {
   @override
   Stream exec() async* {
     var data;
-    yield data = await RemoteService.getInstance().fetchTopics(start, count);
+    yield data = await RemoteService.getInstance().fetchTopics(start: start, count: count);
     yield data;
     List topicsFromData = data['topics'] ?? [];
     var topics = new List<Topic>();
     for(var topic in topicsFromData) {
-      topics.add(new Topic.fromJson(topic));
+      topics.add(new Topic.fromJSON(topic));
     }
     if(clearBefore) {
       $store.commit(new ClearTopicsMutation());
@@ -57,7 +57,7 @@ class LoginAction extends BaseRunUniqueAction<User> {
     var data;
     yield data = await RemoteService.getInstance().doLogin(username, password);
     yield data;
-    User user = new User.fromJson(data);
+    User user = new User.fromJSON(data);
     $store.commit(new SetActiveUserMutation(user));
     yield user;
   }

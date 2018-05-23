@@ -157,7 +157,7 @@ class UpdateRoomTeaserContentMutation extends BaseMutation {
   exec() {
     Room room = $store.state.rooms[this.roomId];
     if(room != null) {
-      room.teaser.content = content;
+      room.teaser?.content = content;
     }
   }
 
@@ -170,6 +170,20 @@ class ClearTopicsMutation extends BaseMutation {
   @override
   exec() {
     $store.state.topics.clear();
+  }
+
+}
+
+class DeleteRoomMutation extends BaseMutation {
+  int roomId;
+
+  DeleteRoomMutation(this.roomId);
+
+  @override
+  exec() {
+    if($store.state.rooms.containsKey(this.roomId)) {
+      $store.state.rooms.remove(this.roomId);
+    }
   }
 
 }
@@ -204,6 +218,28 @@ class UpdateNotificationMutation extends BaseMutation {
     }
     if(newTopic != null) {
       $store.state.notification.newTopic = newTopic;
+    }
+  }
+
+}
+
+class AddRecentViewTopic extends BaseMutation {
+
+  int tid;
+
+  AddRecentViewTopic(this.tid);
+
+  @override
+  exec() {
+    if($store.state.recentViews.length >= 8) {
+      if($store.state.recentViews.contains(this.tid)) {
+        $store.state.recentViews.remove(this.tid);
+      } else {
+        $store.state.recentViews.removeAt(0);
+      }
+      $store.state.recentViews.add(this.tid);
+    } else {
+      $store.state.recentViews.add(this.tid);
     }
   }
 

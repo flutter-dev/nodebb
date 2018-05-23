@@ -25,11 +25,11 @@ class Message extends Object with Reactive {
   
   factory Message({User user, DateTime timestamp, String content, MessageType type}) = _$Message;
 
-  factory Message.fromJson(Map json) {
+  factory Message.fromJSON(Map json) {
     Message msg = new _$Message(
       id: json['messageId'],
-      user: new User.fromJson(json['fromUser']),
-      timestamp: new DateTime.fromMicrosecondsSinceEpoch(json['timestamp']),
+      user: new User.fromJSON(json['fromUser']),
+      timestamp: new DateTime.fromMillisecondsSinceEpoch(json['timestamp']),
       content: json['cleanedContent'],
       type: MessageType.RECEIVE
     );

@@ -26,6 +26,10 @@ abstract class AppState extends Object with Reactive {
 
   ObservableMap<int, Room> rooms;
 
+  ObservableMap<String, dynamic> shareStorage;
+
+  ObservableList<int> recentViews;
+
   AppState.$();
 
   factory AppState({
@@ -35,6 +39,8 @@ abstract class AppState extends Object with Reactive {
     ObservableMap<int, Topic> topics,
     ObservableMap<int, Category> categories,
     ObservableMap<int, User> users,
-    ObservableMap<int, Room> rooms
+    ObservableMap<int, Room> rooms,
+    ObservableMap<String, dynamic> shareStorage,
+    ObservableList<int> recentViews
   }) = _$AppState;
 }

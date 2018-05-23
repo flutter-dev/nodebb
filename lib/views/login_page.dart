@@ -1,11 +1,11 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/widgets.dart';
 import 'package:nodebb/actions/actions.dart';
 import 'package:nodebb/errors/errors.dart';
 import 'package:nodebb/views/base.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends BaseReactivePage {
   LoginPage({Key key, routeParams}) : super(key: key, routeParams: routeParams);
@@ -20,6 +20,13 @@ class _LoginPageState extends BaseReactiveState<LoginPage> {
 
   String password;
 
+  _saveUser(username, password) {
+    SharedPreferences.getInstance().then((prefs) {
+      prefs.setString('username', username);
+      prefs.setString('password', password);
+    });
+  }
+
   _doLogin(BuildContext context) async {
     FocusScope.of(context).requestFocus(new FocusNode());
     try {
@@ -31,6 +38,7 @@ class _LoginPageState extends BaseReactiveState<LoginPage> {
     } catch(err) {
 
     }
+    _saveUser(username, password);
     Scaffold.of(context).showSnackBar(new SnackBar(
       content: new Text('登录成功！ ${$store.state.activeUser.userName} 欢迎回来'),
       backgroundColor: Colors.green,
