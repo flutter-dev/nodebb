@@ -21,7 +21,7 @@ import 'package:nodebb/views/topic_detail_page.dart';
 import 'package:nodebb/models/models.dart';
 import 'package:nodebb/views/user_info_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:nodebb/widgets/animation_page_route.dart';
 const APP_TITLE = 'Flutter Dev';
 
 GlobalKey<_AppState> app = new GlobalKey();
@@ -198,9 +198,9 @@ class _AppState extends State<App> with WidgetsBindingObserver {
     });
 
     _addRoute('/topic/:tid', (Map<String, String> params) {
-      return new MaterialPageRoute(builder: (BuildContext context) {
+      return new AnimationPageRoute(builder: (BuildContext context) {
         return new TopicDetailPage(routeParams: params);
-      }, maintainState: true);
+      }, maintainState: true,slideTween: new Tween(begin: new Offset(1.0, 0.0),end:new Offset(0.0, 0.0)));
     });
 
     _addRoute('/login', (Map<String, String> params) {
