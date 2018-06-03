@@ -12,7 +12,6 @@ import 'package:nodebb/utils/utils.dart' as utils;
 import 'package:nodebb/views/base.dart';
 import 'package:nodebb/widgets/builders.dart';
 import 'package:nodebb/widgets/widgets.dart';
-import 'package:nodebb/utils/syntax_highlighter.dart';
 class TopicDetailPage extends BaseReactivePage {
   TopicDetailPage({key, routeParams})
       : super(key: key, routeParams: routeParams);

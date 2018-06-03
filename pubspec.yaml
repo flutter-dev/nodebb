@@ -9,6 +9,7 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: 0.1.0
   flutter_markdown: 0.1.5
+  string_scanner: 1.0.2
   flutter_wills:
     path: '../flutter_wills'
 
